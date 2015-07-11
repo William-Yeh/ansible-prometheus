@@ -1,0 +1,36 @@
+# Dockerfile for building image that contains software stack provisioned by Ansible.
+#
+# Version  1.0
+#
+
+
+# pull base image
+FROM williamyeh/ansible:centos7-onbuild
+
+MAINTAINER William Yeh <william.pjyeh@gmail.com>
+
+
+#
+# build phase
+#
+
+RUN echo "===> Installing the missing "tar" utility for Docker image..."  && \
+    yum -y install tar
+
+ENV PLAYBOOK test.yml
+RUN ansible-playbook-wrapper --extra-vars "prometheus_use_service=False" -vvv
+
+
+
+#
+# test phase
+#
+
+RUN echo "===> Installing curl for testing purpose..."  && \
+    yum -y install curl
+
+
+VOLUME ["/data"]
+ENV    RESULT     /data/result-centos7
+
+CMD  /etc/init.d/node_exporter start  &&  sleep 10  &&  /etc/init.d/prometheus start  &&  sleep 10  &&  curl http://localhost:9090/metrics  > $RESULT  &&  curl http://localhost:9100/metrics  >> $RESULT

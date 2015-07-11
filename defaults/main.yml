@@ -1,0 +1,43 @@
+---
+
+#
+# variables needed to be defined in user's playbook
+#
+
+
+
+#
+# user-configurable defaults
+#
+
+prometheus_user:   prometheus
+prometheus_group:  prometheus
+
+prometheus_version:                 0.14.0
+prometheus_node_exporter_version:   0.10.0
+prometheus_alertmanager_version:    0.0.3
+gosu_version:  1.4
+
+
+prometheus_install_path:         /opt/prometheus
+prometheus_config_path:          /etc/prometheus
+prometheus_rule_path:            "{{ prometheus_config_path }}/rules"
+prometheus_file_sd_config_path:  "{{ prometheus_config_path }}/tgroups"
+prometheus_db_path:              /var/lib/prometheus
+prometheus_log_path:             /var/log/prometheus
+prometheus_pid_path:             /var/run/prometheus
+
+
+prometheus_download_path:     /tmp
+
+prometheus_clean_tarball:     true
+
+
+#
+# derived variables; internal use only.
+#
+
+
+#---- the following vars are handled in tasks/set-role-variables.yml ------
+
+#prometheus_use_service:       True      # use "service" command to start/restart prometheus?

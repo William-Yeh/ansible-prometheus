@@ -1,0 +1,62 @@
+---
+# file: tasks/install-alertmanager.yml
+#
+# Install Prometheus alertmanager.
+#
+# @see http://prometheus.io/docs/introduction/getting_started/
+#
+
+
+- name: set internal variables for convenience
+  set_fact:
+    prometheus_alertmanager_tarball_url: "https://github.com/prometheus/alertmanager/releases/download/{{ prometheus_alertmanager_version }}/alertmanager-{{ prometheus_alertmanager_version }}.linux-amd64.tar.gz"
+  when: ansible_userspace_bits == "64"
+
+- name: set internal variables for convenience
+  set_fact:
+    prometheus_alertmanager_tarball_url: "https://github.com/prometheus/alertmanager/releases/download/{{ prometheus_alertmanager_version }}/alertmanager-{{ prometheus_alertmanager_version }}.linux-386.tar.gz"
+  when: ansible_userspace_bits == "32"
+
+
+
+- name: mkdir for data
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ prometheus_user }}"
+    group: "{{ prometheus_group }}"
+    mode: "u=rwx,g=rx,o="
+  with_items:
+    - "{{ prometheus_db_path }}"
+
+
+- name: download alertmanager tarball
+  get_url: url="{{ prometheus_alertmanager_tarball_url }}"  dest="{{ prometheus_download_path }}/alertmanager.tar.gz"
+
+- name: uutar alertmanager tarball
+  unarchive:
+    src: "{{ prometheus_download_path }}/alertmanager.tar.gz"
+    dest: "{{ prometheus_install_path }}"
+    owner: "{{ prometheus_user }}"
+    group: "{{ prometheus_group }}"
+    mode: "go-w"
+    copy: no
+
+
+
+- name: set alertmanager variables
+  copy: src="../files/etc-default-alertmanager"  dest=/etc/default/alertmanager
+
+- name: copy INIT script to server
+  template: src="../templates/alertmanager.sysvinit.{{ ansible_os_family|lower }}.sh.j2"  dest="/etc/init.d/alertmanager"  mode="a+x"
+
+- name: set INIT status
+  service: name=alertmanager enabled=yes state=started
+
+
+
+- name: copy alertmanager main config file from playbook's, if any
+  template: src="{{ playbook_dir }}/{{ prometheus_alertmanager_conf }}"  dest="{{ prometheus_config_path }}/alertmanager.conf"
+  when: prometheus_alertmanager_conf is defined
+  notify:
+    - restart alertmanager

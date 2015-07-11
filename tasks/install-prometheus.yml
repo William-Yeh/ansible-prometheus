@@ -1,0 +1,78 @@
+---
+# file: tasks/install-prometheus.yml
+#
+# Install Prometheus server.
+#
+# @see http://prometheus.io/docs/introduction/getting_started/
+#
+
+
+- name: set internal variables for convenience
+  set_fact:
+    prometheus_tarball_url: "https://github.com/prometheus/prometheus/releases/download/{{ prometheus_version }}/prometheus-{{ prometheus_version }}.linux-amd64.tar.gz"
+  when: ansible_userspace_bits == "64"
+
+- name: set internal variables for convenience
+  set_fact:
+    prometheus_tarball_url: "https://github.com/prometheus/prometheus/releases/download/{{ prometheus_version }}/prometheus-{{ prometheus_version }}.linux-386.tar.gz"
+  when: ansible_userspace_bits == "32"
+
+
+
+- name: mkdir for config and data
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ prometheus_user }}"
+    group: "{{ prometheus_group }}"
+    mode: "u=rwx,g=rx,o="
+  with_items:
+    - "{{ prometheus_rule_path }}"
+    - "{{ prometheus_file_sd_config_path }}"
+    - "{{ prometheus_db_path }}"
+
+
+
+
+- name: download prometheus tarball
+  get_url: url="{{ prometheus_tarball_url }}"  dest="{{ prometheus_download_path }}/prometheus.tar.gz"
+
+- name: uutar prometheus tarball
+  unarchive:
+    src: "{{ prometheus_download_path }}/prometheus.tar.gz"
+    dest: "{{ prometheus_install_path }}"
+    owner: "{{ prometheus_user }}"
+    group: "{{ prometheus_group }}"
+    mode: "go-w"
+    copy: no
+
+
+
+- name: set prometheus variables
+  copy: src="../files/etc-default-prometheus"  dest=/etc/default/prometheus
+
+- name: copy INIT script to server
+  template: src="../templates/prometheus.sysvinit.{{ ansible_os_family|lower }}.sh.j2"  dest="/etc/init.d/prometheus"  mode="a+x"
+
+- name: set INIT status
+  service: name=prometheus enabled=yes
+
+
+
+- name: copy prometheus main config file from role's default, if necessary
+  template: src=../templates/prometheus.yml.j2  dest="{{ prometheus_config_path }}/prometheus.yml"
+  when: prometheus_conf_main is not defined
+  notify:
+    - restart prometheus
+
+- name: copy prometheus main config file from playbook's, if any
+  template: src="{{ playbook_dir }}/{{ prometheus_conf_main }}"  dest="{{ prometheus_config_path }}/prometheus.yml"
+  when: prometheus_conf_main is defined
+  notify:
+    - restart prometheus
+
+- name: copy rule files from playbook's, if any
+  copy: src={{ playbook_dir }}/{{ item.value.src }}  dest={{ prometheus_rule_path }}/{{ item.value.dest }}
+  with_dict: prometheus_rule_files | default({})
+  notify:
+    - restart prometheus

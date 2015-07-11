@@ -1,0 +1,16 @@
+notification_config {
+  name: "alertmanager_webhook"
+
+  webhook_config {
+    url: "http://requestb.in/16dqjhr0"
+    send_resolved: true
+  }
+
+}
+
+
+aggregation_rule {
+  notification_config_name: "alertmanager_webhook"
+
+  repeat_rate_seconds: 120
+}

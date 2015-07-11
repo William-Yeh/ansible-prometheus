@@ -1,0 +1,26 @@
+---
+# file: tasks/install-gosu.yml
+#
+# Install "gosu" utility.
+#
+# @see https://github.com/tianon/gosu
+#
+
+
+- name: set internal variables for convenience
+  set_fact:
+    gosu_exe_url: "https://github.com/tianon/gosu/releases/download/{{ gosu_version }}/gosu-amd64"
+  when: ansible_userspace_bits == "64"
+
+- name: set internal variables for convenience
+  set_fact:
+    gosu_exe_url: "https://github.com/tianon/gosu/releases/download/{{ gosu_version }}/gosu-i386"
+  when: ansible_userspace_bits == "32"
+
+
+
+- name: download gosu executable
+  get_url: url="{{ gosu_exe_url }}"  dest="/usr/local/bin/gosu"
+
+- name: add executable permission
+  file: path="/usr/local/bin/gosu" state=file mode="a+x"

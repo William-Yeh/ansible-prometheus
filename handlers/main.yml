@@ -1,0 +1,43 @@
+---
+# file: handlers/main.yml
+#
+
+- name: restart prometheus
+  service: name=prometheus state=restarted
+  when: prometheus_use_service|bool
+#
+#- name: restart prometheus
+#  command: /usr/bin/env prometheus -s reload
+#  when: not prometheus_use_service|bool
+
+- name: reload prometheus
+  service: name=prometheus state=reloaded
+  when: prometheus_use_service|bool
+#
+#- name: reload prometheus
+#  command: /usr/bin/env prometheus -s reload
+#  when: not prometheus_use_service|bool
+
+- name: stop prometheus
+  service: name=prometheus state=stopped
+  when: prometheus_use_service|bool
+#
+#- name: stop prometheus
+#  command: /usr/bin/env prometheus -s stop
+#  when: not prometheus_use_service|bool
+
+
+
+
+
+- name: restart alertmanager
+  service: name=alertmanager state=restarted
+  when: prometheus_use_service|bool
+
+- name: reload alertmanager
+  service: name=alertmanager state=reloaded
+  when: prometheus_use_service|bool
+
+- name: stop alertmanager
+  service: name=alertmanager state=stopped
+  when: prometheus_use_service|bool

@@ -1,0 +1,39 @@
+machine:
+  services:
+    - docker
+
+dependencies:
+  override:
+    - docker info
+    - docker version
+
+    - docker build  -f test/Dockerfile-ubuntu14.04  -t prometheus_trusty   .
+    - docker build  -f test/Dockerfile-ubuntu12.04  -t prometheus_precise  .
+    - docker build  -f test/Dockerfile-debian8      -t prometheus_jessie   .
+    - docker build  -f test/Dockerfile-debian7      -t prometheus_wheezy   .
+    - docker build  -f test/Dockerfile-centos7      -t prometheus_centos7  .
+    - docker build  -f test/Dockerfile-centos6      -t prometheus_centos6  .
+
+test:
+  override:
+    - docker run -d -v $(pwd):/data --name c1 prometheus_trusty
+    - docker run -d -v $(pwd):/data --name c2 prometheus_precise
+    - docker run -d -v $(pwd):/data --name c3 prometheus_jessie
+    - docker run -d -v $(pwd):/data --name c4 prometheus_wheezy
+    - docker run -d -v $(pwd):/data --name c5 prometheus_centos7
+    - docker run -d -v $(pwd):/data --name c6 prometheus_centos6
+    - sleep 30
+
+    - echo "==> Validating the test results..."
+    - grep '^node_boot_time'                            result-ubuntu14.04
+    - grep '^node_boot_time'                            result-ubuntu12.04
+    - grep '^node_boot_time'                            result-debian8
+    - grep '^node_boot_time'                            result-debian7
+    - grep '^node_boot_time'                            result-centos7
+    - grep '^node_boot_time'                            result-centos6
+    - grep '^prometheus_target_interval_length_seconds' result-ubuntu14.04
+    - grep '^prometheus_target_interval_length_seconds' result-ubuntu12.04
+    - grep '^prometheus_target_interval_length_seconds' result-debian8
+    - grep '^prometheus_target_interval_length_seconds' result-debian7
+    - grep '^prometheus_target_interval_length_seconds' result-centos7
+    - grep '^prometheus_target_interval_length_seconds' result-centos6

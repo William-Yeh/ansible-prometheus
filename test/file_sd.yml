@@ -1,0 +1,6 @@
+#
+# Example file for file-based service discovery.
+# @see http://prometheus.io/blog/2015/06/01/advanced-service-discovery/
+
+- targets:
+  - "localhost:9100"

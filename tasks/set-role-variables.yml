@@ -1,0 +1,9 @@
+---
+# file: tasks/set-role-variables.yml
+# set necessary role variables.
+#
+
+- name: set prometheus_use_service = True, if not defined
+  set_fact:
+    prometheus_use_service: True
+  when: prometheus_use_service is not defined

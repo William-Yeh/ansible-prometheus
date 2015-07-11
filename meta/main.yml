@@ -1,0 +1,28 @@
+---
+# monit/meta/main.yml
+
+galaxy_info:
+    author: williamyeh
+    description: Install and configure Prometheus
+    license: Apache
+
+    min_ansible_version: 1.8
+
+    platforms:
+        - name: Ubuntu
+          versions:
+              - precise
+              - trusty
+        - name: Debian
+          versions:
+              - jessie
+              - wheezy
+        - name: EL
+          versions:
+              - 6
+              - 7
+    categories:
+        - system
+        - monitoring
+
+dependencies: []

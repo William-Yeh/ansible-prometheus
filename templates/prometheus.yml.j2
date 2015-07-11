@@ -1,0 +1,38 @@
+global:
+  scrape_interval:     15s  # default = every 15 seconds.
+  evaluation_interval: 15s  # default = every 15 seconds.
+  # scrape_timeout is set to the global default (10s).
+
+  # Attach these extra labels to all timeseries collected by this Prometheus instance.
+  labels:
+    monitor: 'master'
+
+
+
+{% if prometheus_rule_files is defined %}
+rule_files:
+  {% for (key, value) in prometheus_rule_files.iteritems() %}
+  - {{ prometheus_rule_path }}/{{ value.dest }}
+  {% endfor %}
+{% endif %}
+
+
+
+
+scrape_configs:
+
+  - job_name: 'prometheus'
+    scrape_interval: 5s
+    scrape_timeout: 10s
+    target_groups:
+      - targets: ['localhost:9090']
+
+  - job_name: "node"
+    file_sd_configs:
+      - names:
+        - '{{ prometheus_file_sd_config_path }}/*.json'
+        - '{{ prometheus_file_sd_config_path }}/*.yml'
+        - '{{ prometheus_file_sd_config_path }}/*.yaml'
+    #target_groups:
+    #- targets:
+    #  - "localhost:9100"

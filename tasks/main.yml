@@ -1,0 +1,57 @@
+---
+# file: tasks/main.yml
+# Top-level installer for Prometheus.
+#
+# @see https://github.com/prometheus/prometheus
+# @see http://prometheus.io/docs/introduction/getting_started/
+#
+
+- name: set role variables, if necessary
+  include: set-role-variables.yml
+
+
+- name: install libselinux-python binary for Ansible to work
+  yum: name=libselinux-python state=present
+  when: ansible_pkg_mgr == "yum"
+
+
+- name: create Prometheus group
+  group: name=prometheus state=present
+
+- name: create Prometheus user
+  user:
+    name: prometheus
+    group: prometheus
+    createhome: no
+    shell: /sbin/nologin
+    comment: "Prometheus User"
+    state: present
+
+- name: mkdir for general cases
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ prometheus_user }}"
+    group: "{{ prometheus_group }}"
+    mode: "u=rwx,g=rx,o="
+  with_items:
+    - "{{ prometheus_install_path }}"
+    - "{{ prometheus_config_path }}"
+    - "{{ prometheus_log_path }}"
+    - "{{ prometheus_pid_path }}"
+
+
+- name: install helper utility "gosu"
+  include: install-gosu.yml
+
+- name: install prometheus
+  include: install-prometheus.yml
+  when: '"prometheus" in prometheus_components'
+
+- name: install node-exporter
+  include: install-node-exporter.yml
+  when: '"node_exporter" in prometheus_components'
+
+- name: install alertmanager
+  include: install-alertmanager.yml
+  when: '"alertmanager" in prometheus_components'
