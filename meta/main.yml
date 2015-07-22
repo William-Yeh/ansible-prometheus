@@ -4,7 +4,7 @@
 galaxy_info:
     author: williamyeh
     description: Install and configure Prometheus
-    license: Apache
+    license: MIT
 
     min_ansible_version: 1.8
 

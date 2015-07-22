@@ -245,4 +245,4 @@ None.
 
 ## License
 
-Apache License V2.0. See the [LICENSE file](LICENSE) for details.
+MIT License. See the [LICENSE file](LICENSE) for details.
