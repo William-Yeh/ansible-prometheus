@@ -238,6 +238,11 @@ More practical example:
 ```
 
 
+### Step 4: browse the default Prometheus page
+
+Open “`http://`HOST`:9090`” in your browser.
+
+
 ## Dependencies
 
 None.
