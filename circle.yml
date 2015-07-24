@@ -16,13 +16,12 @@ dependencies:
 
 test:
   override:
-    - docker run -d -v $(pwd):/data --name c1 prometheus_trusty
-    - docker run -d -v $(pwd):/data --name c2 prometheus_precise
-    - docker run -d -v $(pwd):/data --name c3 prometheus_jessie
-    - docker run -d -v $(pwd):/data --name c4 prometheus_wheezy
-    - docker run -d -v $(pwd):/data --name c5 prometheus_centos7
-    - docker run -d -v $(pwd):/data --name c6 prometheus_centos6
-    - sleep 30
+    - docker run  -v $(pwd):/data  prometheus_trusty
+    - docker run  -v $(pwd):/data  prometheus_precise
+    - docker run  -v $(pwd):/data  prometheus_jessie
+    - docker run  -v $(pwd):/data  prometheus_wheezy
+    - docker run  -v $(pwd):/data  prometheus_centos7
+    - docker run  -v $(pwd):/data  prometheus_centos6
 
     - echo "==> Validating the test results..."
     - grep '^node_boot_time'                            result-ubuntu14.04
