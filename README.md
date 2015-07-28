@@ -76,7 +76,7 @@ User-configurable defaults:
 
 ```yaml
 # which version?
-prometheus_version:  0.14.0
+prometheus_version:  0.15.1
 
 
 
@@ -133,7 +133,7 @@ User-configurable defaults:
 
 ```yaml
 # which version?
-prometheus_node_exporter_version:  0.10.0
+prometheus_node_exporter_version:  0.11.0
 ```
 
 
