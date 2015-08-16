@@ -6,7 +6,7 @@
 # @see http://prometheus.io/docs/introduction/getting_started/
 #
 - name: get promdash from github
-  git: repo=https://github.com/prometheus/promdash.git dest="{{ prometheus_install_path }}/promdash"
+  git: repo=https://github.com/prometheus/promdash.git dest="{{ prometheus_install_path }}/promdash" force=yes
 
 - name: install ruby dependencies
   apt: name={{ item }} state=present
