@@ -55,3 +55,7 @@
 - name: install alertmanager
   include: install-alertmanager.yml
   when: '"alertmanager" in prometheus_components'
+
+- name: install promdash
+  include: install-promdash.yml
+  when: '"promdash" in prometheus_components'
