@@ -52,6 +52,10 @@
   include: install-node-exporter.yml
   when: '"node_exporter" in prometheus_components'
 
+- name: install consul-exporter
+  include: install-consul-exporter.yml
+  when: '"consul_exporter" in prometheus_components'
+
 - name: install alertmanager
   include: install-alertmanager.yml
   when: '"alertmanager" in prometheus_components'
