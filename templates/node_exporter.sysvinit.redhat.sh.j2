@@ -28,12 +28,10 @@ LOG="{{ prometheus_log_path }}/$NAME.log"
 GOSU=/usr/local/bin/gosu
 
 {% if prometheus_node_exporter_opts is defined %}
-NODE_EXPORTER_OPTS='{{ prometheus_node_exporter_opts }}'
+DAEMON_OPTS='{{ prometheus_node_exporter_opts }}'
 {% else %}
-NODE_EXPORTER_OPTS=
+DAEMON_OPTS=
 {% endif %}
-
-DAEMON_OPTS="$NODE_EXPORTER_OPTS"
 
 RETVAL=0
 
