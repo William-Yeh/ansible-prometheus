@@ -26,8 +26,14 @@ CONFIG=
 PID="{{ prometheus_pid_path }}/$NAME.pid"
 LOG="{{ prometheus_log_path }}/$NAME.log"
 GOSU=/usr/local/bin/gosu
-DAEMON_OPTS=
 
+{% if prometheus_node_exporter_opts is defined %}
+NODE_EXPORTER_OPTS='{{ prometheus_node_exporter_opts }}'
+{% else %}
+NODE_EXPORTER_OPTS=
+{% endif %}
+
+DAEMON_OPTS="$NODE_EXPORTER_OPTS"
 
 RETVAL=0
 

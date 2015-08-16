@@ -25,7 +25,7 @@ CONFIG=
 PID="{{ prometheus_pid_path }}/$NAME.pid"
 LOG="{{ prometheus_log_path }}/$NAME.log"
 GOSU=/usr/local/bin/gosu
-DAEMON_OPTS=
+DAEMON_OPTS="{{ prometheus_node_exporter_opts }}"
 
 
 # Check if DAEMON binary exist
