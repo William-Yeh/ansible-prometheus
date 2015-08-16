@@ -20,11 +20,10 @@
   shell: "/usr/bin/bundle install --without mysql postgresql"
   args:
     chdir: "{{ prometheus_install_path }}/promdash"
-  when: ansible_version.major == 1
 
-- name: install gems
-  bundler: state=latest chdir={{ prometheus_install_path }}/promdash extra_args="--without mysql postgresql"
-  when: ansible_version.major == 2
+# - name: install gems
+#   bundler: state=latest chdir={{ prometheus_install_path }}/promdash extra_args="--without mysql postgresql"
+#   when: ansible_version.major == 2
 
 - name: build thin config
   shell: "/usr/local/bin/thin config -C /etc/thin/promdash.yml -c {{ prometheus_install_path }}/promdash -e production"
