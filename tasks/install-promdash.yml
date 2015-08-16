@@ -26,7 +26,7 @@
 #   when: ansible_version.major == 2
 
 - name: build thin config
-  shell: "/usr/local/bin/thin config -C /etc/thin/promdash.yml -c {{ prometheus_install_path }}/promdash -e production"
+  shell: "/usr/local/bin/thin config -C /etc/thin/promdash.yml -c {{ prometheus_install_path }}/promdash -e production -u {{ prometheus_user }} -g {{ prometheus_group }}"
   args:
     chdir: "{{ prometheus_install_path }}/promdash"
 
