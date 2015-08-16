@@ -53,9 +53,20 @@
 
 - name: copy database.yml to server
   copy: src="../files/promdash.database.yml" dest="{{ prometheus_install_path }}/promdash/config/database.yml"
+  when: sqlite.stat.exists == false
+
+- name: Check to see if the init file is installed
+  stat: path="/etc/init.d/promdash"
+  register: init
 
 - name: copy INIT script to server
   template: src="../templates/promdash.sysvinit.{{ ansible_os_family|lower }}.sh.j2"  dest="/etc/init.d/promdash"  mode="a+x"
+  when: init.stat.exists == false
 
 - name: set INIT status
   service: name=promdash enabled=yes state=started
+  when: init.stat.exists == false
+
+- name: set INIT status
+  service: name=promdash enabled=yes state=restarted
+  when: init.stat.exists == true
