@@ -28,15 +28,21 @@
 
 - name: build thin config
   shell: "/usr/local/bin/thin config -C /etc/thin/promdash.yml -c /opt/prometheus/promdash -e production"
+  args:
+    chdir: "{{ prometheus_install_path }}/promdash"
 
 - name: create the sqlite3 db
   shell: "/usr/local/bin/rake db:migrate"
+  args:
+    chdir: "{{ prometheus_install_path }}/promdash"
   environment:
     DATABASE_URL: "sqlite3:{{ prometheus_install_path }}/promdash/db/db.sqlite3"
     RAILS_ENV: "production"
 
 - name: precompile the assets
   shell: "/usr/local/bin/rake assets:precompile"
+  args:
+    chdir: "{{ prometheus_install_path }}/promdash"
   environment:
     DATABASE_URL: "sqlite3:{{ prometheus_install_path }}/promdash/db.sqlite3"
     RAILS_ENV: "production"
