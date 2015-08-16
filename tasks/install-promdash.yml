@@ -1,0 +1,44 @@
+---
+# file: tasks/install-promdash.yml
+#
+# Install promdash.
+#
+# @see http://prometheus.io/docs/introduction/getting_started/
+#
+- name: get promdash from github
+  git: repo=https://github.com/prometheus/promdash.git dest="{{ prometheus_install_path }}/promdash"
+
+- name: install ruby dependencies
+  apt: name={{ item }} state=present
+  with_items:
+    - ruby
+    - bundler
+    - libsqlite3-dev
+    - sqlite3
+
+- name: install gems
+  bundler: state=latest chdir={{ prometheus_install_path }}/promdash extra_args="--without mysql postgresql"
+
+- name: build thin config
+  shell: "/usr/local/bin/thin config -C /etc/thin/promdash.yml -c /opt/prometheus/promdash -e production"
+
+- name: create the sqlite3 db
+  shell: "/usr/local/bin/rake db:migrate"
+  environment:
+    DATABASE_URL: "sqlite3:{{ prometheus_install_path }}/promdash/db/db.sqlite3"
+    RAILS_ENV: "production"
+
+- name: precompile the assets
+  shell: "/usr/local/bin/rake assets:precompile"
+  environment:
+    DATABASE_URL: "sqlite3:{{ prometheus_install_path }}/promdash/db.sqlite3"
+    RAILS_ENV: "production"
+
+- name: copy database.yml to server
+  template: src="../templates/promdash.database.yml.j2" dest="/opt/promdash/config/database.yml"
+
+- name: copy INIT script to server
+  template: src="../templates/promdash.sysvinit.{{ ansible_os_family|lower }}.sh.j2"  dest="/etc/init.d/promdash"  mode="a+x"
+
+- name: set INIT status
+  service: name=promdash enabled=yes state=started
