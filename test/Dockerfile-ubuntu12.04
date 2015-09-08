@@ -23,6 +23,9 @@ RUN ansible-playbook-wrapper
 # test phase
 #
 
+RUN echo "==> Removing PID files..."  && \
+    rm -f /var/run/prometheus/* 
+
 RUN echo "===> Installing curl for testing purpose..."  && \
     DEBIAN_FRONTEND=noninteractive  \
     apt-get install -y -f curl
