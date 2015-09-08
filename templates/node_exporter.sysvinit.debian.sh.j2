@@ -53,6 +53,19 @@ service_checks () {
   if [ "$START" != "yes" ]; then
     service_not_configured $1
   fi
+
+  # Prepare directories
+  mkdir -p "{{ prometheus_pid_path }}" "{{ prometheus_log_path }}"
+  chown -R $USER "{{ prometheus_pid_path }}" "{{ prometheus_log_path }}"
+
+  # Check if PID exists
+  if [ -f "$PID" ]; then
+    pgrep --pidfile $PID
+    if [ "$?" -eq 0 ]; then
+      echo "Service already started; skip..."
+      exit 1
+    fi
+  fi
 }
 
 start () {
