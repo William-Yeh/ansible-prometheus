@@ -16,7 +16,10 @@ Vagrant.configure(2) do |config|
             ansible.verbose = "vvv"
         end
 
+        # Prometheus server UI port
         node.vm.network :forwarded_port, guest: 9090, host: 9090
+        # Alertmanager UI port
+        node.vm.network :forwarded_port, guest: 9093, host: 9093
 
     end
 
