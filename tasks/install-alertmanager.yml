@@ -25,13 +25,13 @@
   when: prometheus_alertmanager_version == "git"
 
 - name: delete the alertmanager directory if it already exists
-  file: path="{{ prometheus_download_path }}/alertmanager" state=absent
+  file: path="{{ prometheus_download_path }}/alertmanager-master" state=absent
   when: prometheus_alertmanager_version == "git"
 
 - name: download alertmanager tarball
   get_url: url="{{ prometheus_alertmanager_tarball_url }}" dest="{{ prometheus_download_path }}/alertmanager.tar.gz" force=yes
 
-- name: uutar alertmanager tarball
+- name: untar alertmanager tarball
   unarchive:
     src: "{{ prometheus_download_path }}/alertmanager.tar.gz"
     dest: "{{ prometheus_untar_path }}"
@@ -40,12 +40,12 @@
 - name: build alertmanager
   command: make
   args:
-    chdir: "{{ prometheus_download_path }}/alertmanager"
+    chdir: "{{ prometheus_download_path }}/alertmanager-master"
     creates: alertmanager
   when: prometheus_alertmanager_version == "git"
 
 - name: move the built alertmanager to the install path
-  command: "mv {{ prometheus_download_path }}/alertmanager {{ prometheus_install_path }}"
+  command: "mv {{ prometheus_download_path }}/alertmanager-master/alertmanager {{ prometheus_install_path }}"
   when: prometheus_alertmanager_version == "git"
 
 - name: set permissions, owner and group
