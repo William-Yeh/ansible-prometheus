@@ -6,18 +6,47 @@
 # @see http://prometheus.io/docs/introduction/getting_started/
 #
 
-
 - name: set internal variables for convenience
   set_fact:
     prometheus_tarball_url: "https://github.com/prometheus/prometheus/releases/download/{{ prometheus_version }}/prometheus-{{ prometheus_version }}.linux-amd64.tar.gz"
-  when: ansible_userspace_bits == "64"
+    prometheus_untar_path: "{{ prometheus_install_path }}"
+  when: prometheus_version != "git" and ansible_userspace_bits == "64"
 
 - name: set internal variables for convenience
   set_fact:
     prometheus_tarball_url: "https://github.com/prometheus/prometheus/releases/download/{{ prometheus_version }}/prometheus-{{ prometheus_version }}.linux-386.tar.gz"
-  when: ansible_userspace_bits == "32"
+    prometheus_untar_path: "{{ prometheus_install_path }}"
+  when: prometheus_version != "git" and ansible_userspace_bits == "32"
 
+- name: set internal variables for convenience
+  set_fact:
+    prometheus_tarball_url: "https://github.com/prometheus/prometheus/archive/master.tar.gz"
+    prometheus_untar_path: /tmp
+  when: prometheus_version == "git"
 
+- name: delete the prometheus directory if it already exists
+  file: path="{{ prometheus_download_path }}/prometheus-master" state=absent
+  when: prometheus_version == "git"
+
+- name: download prometheus tarball
+  get_url: url="{{ prometheus_tarball_url }}"  dest="{{ prometheus_download_path }}/prometheus.tar.gz"
+
+- name: untar prometheus tarball
+  unarchive:
+    src: "{{ prometheus_download_path }}/prometheus.tar.gz"
+    dest: "{{ prometheus_untar_path }}"
+    copy: no
+
+- name: build prometheus
+  command: make
+  args:
+    chdir: "{{ prometheus_download_path }}/prometheus-master"
+    creates: prometheus
+  when: prometheus_version == "git"
+
+- name: move the built prometheus to the install path
+  command: "mv {{ prometheus_download_path }}/prometheus-master/prometheus {{ prometheus_install_path }}"
+  when: prometheus_version == "git"
 
 - name: mkdir for config and data
   file:
@@ -31,23 +60,6 @@
     - "{{ prometheus_file_sd_config_path }}"
     - "{{ prometheus_db_path }}"
 
-
-
-
-- name: download prometheus tarball
-  get_url: url="{{ prometheus_tarball_url }}"  dest="{{ prometheus_download_path }}/prometheus.tar.gz"
-
-- name: uutar prometheus tarball
-  unarchive:
-    src: "{{ prometheus_download_path }}/prometheus.tar.gz"
-    dest: "{{ prometheus_install_path }}"
-    owner: "{{ prometheus_user }}"
-    group: "{{ prometheus_group }}"
-    mode: "go-w"
-    copy: no
-
-
-
 - name: set prometheus variables
   copy: src="../files/etc-default-prometheus"  dest=/etc/default/prometheus
 
@@ -56,8 +68,6 @@
 
 - name: set INIT status
   service: name=prometheus enabled=yes
-
-
 
 - name: copy prometheus main config file from role's default, if necessary
   template: src=../templates/prometheus.yml.j2  dest="{{ prometheus_config_path }}/prometheus.yml"
