@@ -66,4 +66,4 @@
   template: src="../templates/node_exporter.sysvinit.{{ ansible_os_family|lower }}.sh.j2"  dest="/etc/init.d/node_exporter"  mode="a+x"
 
 - name: set INIT status
-  service: name=node_exporter enabled=yes state=started
+  service: name=node_exporter enabled=yes state=restarted
