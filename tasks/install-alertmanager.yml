@@ -66,7 +66,7 @@
   template: src="../templates/alertmanager.sysvinit.{{ ansible_os_family|lower }}.sh.j2"  dest="/etc/init.d/alertmanager"  mode="a+x"
 
 - name: set INIT status
-  service: name=alertmanager enabled=yes state=started
+  service: name=alertmanager enabled=yes state=restarted
 
 - name: copy alertmanager main config file from playbook's, if any
   template: src="{{ playbook_dir }}/{{ prometheus_alertmanager_conf }}"  dest="{{ prometheus_config_path }}/alertmanager.conf"
