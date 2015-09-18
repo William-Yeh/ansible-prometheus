@@ -2,7 +2,7 @@
 williamyeh.prometheus for Ansible Galaxy
 ============
 
-[![Circle CI](https://circleci.com/gh/William-Yeh/ansible-prometheus.svg?style=shield)](https://circleci.com/gh/William-Yeh/ansible-prometheus)
+[![Circle CI](https://circleci.com/gh/William-Yeh/ansible-prometheus.svg?style=shield)](https://circleci.com/gh/William-Yeh/ansible-prometheus) [![Build Status](https://travis-ci.org/William-Yeh/ansible-prometheus.svg?branch=master)](https://travis-ci.org/William-Yeh/ansible-prometheus)
 
 
 
