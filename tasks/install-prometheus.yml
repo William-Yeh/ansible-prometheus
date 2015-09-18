@@ -21,11 +21,15 @@
 - name: set internal variables for convenience
   set_fact:
     prometheus_tarball_url: "https://github.com/prometheus/prometheus/archive/master.tar.gz"
-    prometheus_untar_path: "{{ prometheus_download_path }}/prometheus_workdir/gopath/src/github.com/prometheus/prometheus"
+    prometheus_untar_path: "{{ prometheus_download_path }}/prometheus_workdir/gopath/src/github.com/prometheus"
   when: prometheus_version == "git"
 
 - name: delete the prometheus directory if it already exists
   file: path="{{ prometheus_download_path }}/prometheus_workdir" state=absent
+  when: prometheus_version == "git"
+
+- name: create initial directory structure
+  file: path="{{ prometheus_untar_path }}" state=directory
   when: prometheus_version == "git"
 
 - name: download prometheus tarball
@@ -37,14 +41,18 @@
     dest: "{{ prometheus_untar_path }}"
     copy: no
 
+- name: move prometheus-master to prometheus
+  command: "mv {{ prometheus_untar_path }}/prometheus-master {{ prometheus_untar_path }}/prometheus"
+  when: prometheus_version == "git"
+
 - name: install temporary go
-  command: "{{ prometheus_untar_path }}/scripts/goenv.sh {{ prometheus_download_path }}/prometheus_workdir/go {{ prometheus_download_path }}/prometheus_workdir/gopath"
+  command: "{{ prometheus_untar_path }}/prometheus/scripts/goenv.sh {{ prometheus_download_path }}/prometheus_workdir/go {{ prometheus_download_path }}/prometheus_workdir/gopath"
   when: prometheus_version == "git"
 
 - name: build prometheus
   command: make build
   args:
-    chdir: "{{ prometheus_untar_path }}"
+    chdir: "{{ prometheus_untar_path }}/prometheus"
     creates: prometheus
   environment:
     GOPATH: "{{ prometheus_download_path }}/prometheus_workdir/gopath"
@@ -52,7 +60,7 @@
   when: prometheus_version == "git"
 
 - name: move the built prometheus to the install path
-  command: "mv {{ prometheus_untar_path }}/{{ item }} {{ prometheus_install_path }}"
+  command: "mv {{ prometheus_untar_path }}/prometheus/{{ item }} {{ prometheus_install_path }}"
   with_items:
     - prometheus
     - promtool
