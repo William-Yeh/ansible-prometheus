@@ -21,11 +21,11 @@
 - name: set internal variables for convenience
   set_fact:
     prometheus_tarball_url: "https://github.com/prometheus/prometheus/archive/master.tar.gz"
-    prometheus_untar_path: /tmp
+    prometheus_untar_path: "{{ prometheus_download_path }}/prometheus_workdir/gopath/src/github.com/prometheus/prometheus"
   when: prometheus_version == "git"
 
 - name: delete the prometheus directory if it already exists
-  file: path="{{ prometheus_download_path }}/prometheus-master" state=absent
+  file: path="{{ prometheus_download_path }}/prometheus_workdir" state=absent
   when: prometheus_version == "git"
 
 - name: download prometheus tarball
@@ -37,15 +37,27 @@
     dest: "{{ prometheus_untar_path }}"
     copy: no
 
+- name: install temporary go
+  command: "{{ prometheus_untar_path }}/scripts/goenv.sh {{ prometheus_download_path }}/prometheus_workdir/go {{ prometheus_download_path }}/prometheus_workdir/gopath"
+  when: prometheus_version == "git"
+
 - name: build prometheus
-  command: make
+  command: make build
   args:
-    chdir: "{{ prometheus_download_path }}/prometheus-master"
+    chdir: "{{ prometheus_untar_path }}"
     creates: prometheus
+  environment:
+    GOPATH: "{{ prometheus_download_path }}/prometheus_workdir/gopath"
+    GOROOT: "{{ prometheus_download_path }}/prometheus_workdir/go"
   when: prometheus_version == "git"
 
 - name: move the built prometheus to the install path
-  command: "mv {{ prometheus_download_path }}/prometheus-master/prometheus {{ prometheus_install_path }}"
+  command: "mv {{ prometheus_untar_path }}/{{ item }} {{ prometheus_install_path }}"
+  with_items:
+    - prometheus
+    - promtool
+    - consoles
+    - console_libraries
   when: prometheus_version == "git"
 
 - name: mkdir for config and data
