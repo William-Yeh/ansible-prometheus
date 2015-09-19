@@ -12,7 +12,7 @@ Role name in Ansible Galaxy: **[williamyeh.prometheus](https://galaxy.ansible.co
 
 This Ansible role has the following features for [Prometheus](http://prometheus.io/):
 
- - Install specific versions of Prometheus server, node_exporter, and alertmanager.
+ - Install specific versions of Prometheus server, node_exporter, consul_exporter, and alertmanager.
  - Handlers for restart/reload/stop events;
  - Bare bone configuration (*real* configuration should be left to user's template files; see **Usage** section below).
 
@@ -42,6 +42,7 @@ prometheus_group:  prometheus
 # possible values:
 #  - "prometheus"
 #  - "node_exporter"
+#  - "consul_exporter"
 #  - "alertmanager"
 prometheus_components: [ "prometheus", "node_exporter" ]
 
