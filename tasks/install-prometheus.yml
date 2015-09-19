@@ -46,8 +46,13 @@
   when: prometheus_version == "git"
 
 - name: install temporary go
-  command: "{{ prometheus_untar_path }}/prometheus/scripts/goenv.sh {{ prometheus_download_path }}/prometheus_workdir/go {{ prometheus_download_path }}/prometheus_workdir/gopath"
+  shell: "{{ prometheus_untar_path }}/prometheus/scripts/goenv.sh {{ prometheus_download_path }}/prometheus_workdir/go {{ prometheus_download_path }}/prometheus_workdir/gopath"
   when: prometheus_version == "git"
+
+- name: determine installed go
+  command: "ls {{ prometheus_download_path }}/prometheus_workdir/go/"
+  when: prometheus_version == "git"
+  register: go_version
 
 - name: build prometheus
   command: make build
@@ -55,8 +60,16 @@
     chdir: "{{ prometheus_untar_path }}/prometheus"
     creates: prometheus
   environment:
+    PATH: "{{ ansible_env.PATH }}:{{ prometheus_download_path }}/prometheus_workdir/go/{{ go_version.stdout }}/bin"
     GOPATH: "{{ prometheus_download_path }}/prometheus_workdir/gopath"
-    GOROOT: "{{ prometheus_download_path }}/prometheus_workdir/go"
+    GOROOT: "{{ prometheus_download_path }}/prometheus_workdir/go/{{ go_version.stdout }}"
+  when: prometheus_version == "git"
+
+- name: remove existing consoles and console_libraries directories, if they exist
+  command: "rm -rf {{ prometheus_install_path }}/{{ item }}"
+  with_items:
+    - consoles
+    - console_libraries
   when: prometheus_version == "git"
 
 - name: move the built prometheus to the install path
