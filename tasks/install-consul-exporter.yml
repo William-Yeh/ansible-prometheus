@@ -60,4 +60,4 @@
   template: src="../templates/consul_exporter.sysvinit.{{ ansible_os_family|lower }}.sh.j2"  dest="/etc/init.d/consul_exporter"  mode="a+x"
 
 - name: set INIT status
-  service: name=consul_exporter enabled=yes state=started
+  service: name=consul_exporter enabled=yes state=restarted
