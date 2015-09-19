@@ -21,6 +21,18 @@ This Ansible role has the following features for [Prometheus](http://prometheus.
 
 ## Role Variables
 
+### Versioning note
+For all 3 of the possible `prometheus_components` you can set the respective version to `git` to download the latest code and compile from the Prometheus repositories.
+There are no external requirements needed to compile from source, as Prometheus provides them all via the install scripts.
+
+For example, you can set all three variables to `git` to get the latest code for each component.
+
+```yaml
+prometheus_version: git
+prometheus_node_exporter_version: git
+prometheus_alertmanager_version: git
+```
+
 ### Mandatory variables
 
 None.
