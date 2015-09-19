@@ -24,10 +24,6 @@
     prometheus_untar_path: "{{ prometheus_download_path }}/prometheus_workdir/gopath/src/github.com/prometheus"
   when: prometheus_version == "git"
 
-- name: delete the prometheus directory if it already exists
-  file: path="{{ prometheus_download_path }}/prometheus_workdir" state=absent
-  when: prometheus_version == "git"
-
 - name: create initial directory structure
   file: path="{{ prometheus_untar_path }}" state=directory
   when: prometheus_version == "git"
@@ -119,3 +115,7 @@
   with_dict: prometheus_rule_files | default({})
   notify:
     - restart prometheus
+
+- name: delete the prometheus directory if it already exists
+  file: path="{{ prometheus_download_path }}/prometheus_workdir" state=absent
+  when: prometheus_version == "git"
