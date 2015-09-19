@@ -163,6 +163,16 @@ prometheus_alertmanager_conf
 
 ```
 
+### Optional variables: Consul exporter
+
+You can also set the version to `git` to get the latest source code from the repository and compile it. There are no external requirements needed.
+
+User-configurable defaults:
+
+```yaml
+# which version?
+prometheus_consul_exporter_version:  0.2.0
+```
 
 ## Handlers
 
