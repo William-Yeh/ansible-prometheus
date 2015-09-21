@@ -138,7 +138,7 @@ prometheus_node_exporter_version:  0.11.0
 
 
 
-### Optional variables: Alert manager
+### Optional variables: Alertmanager
 
 
 User-configurable defaults:
@@ -148,7 +148,7 @@ User-configurable defaults:
 prometheus_alertmanager_version:  0.0.3
 
 # directory for runtime database
-prometheus_db_path:   /var/lib/prometheus
+prometheus_alertmanager_db_path: /var/lib/alertmanager
 ```
 
 
