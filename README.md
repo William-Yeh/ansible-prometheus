@@ -24,6 +24,7 @@ This Ansible role has the following features for [Prometheus](http://prometheus.
 ### Versioning note
 For all 3 of the possible `prometheus_components` you can set the respective version to `git` to download the latest code and compile from the Prometheus repositories.
 There are no external requirements needed to compile from source, as Prometheus provides them all via the install scripts.
+Git, Mercurial, GZip and Curl will be installed from your package manager (yum or apt). If you already have all dependencies, nothing will be installed.
 
 For example, you can set all three variables to `git` to get the latest code for each component.
 
