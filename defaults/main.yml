@@ -13,7 +13,7 @@
 prometheus_user:   prometheus
 prometheus_group:  prometheus
 
-prometheus_version:                 0.15.1
+prometheus_version:                 0.16.0rc1
 prometheus_node_exporter_version:   0.11.0
 prometheus_alertmanager_version:    0.0.4
 gosu_version:  1.4
@@ -26,6 +26,7 @@ prometheus_file_sd_config_path:  "{{ prometheus_config_path }}/tgroups"
 prometheus_db_path:              /var/lib/prometheus
 prometheus_log_path:             /var/log/prometheus
 prometheus_pid_path:             /var/run/prometheus
+prometheus_alertmanager_db_path: /var/lib/alertmanager
 
 
 prometheus_download_path:     /tmp

@@ -22,7 +22,7 @@ set -e
 
 NAME=prometheus
 DESC="Prometheus monitoring system"
-DAEMON={{ prometheus_install_path }}/prometheus
+DAEMON={{ prometheus_daemon_dir }}/prometheus
 USER={{ prometheus_user }}
 CONFIG={{ prometheus_config_path }}/prometheus.yml
 PID="{{ prometheus_pid_path }}/$NAME.pid"
@@ -40,7 +40,7 @@ ALERTMANAGER_OPTS=
 
 DAEMON_OPTS="$ALERTMANAGER_OPTS"
 DAEMON_OPTS="$DAEMON_OPTS -config.file=$CONFIG  -storage.local.path={{ prometheus_db_path }}"
-DAEMON_OPTS="$DAEMON_OPTS -web.console.templates={{ prometheus_install_path }}/consoles  -web.console.libraries={{ prometheus_install_path }}/console_libraries"
+DAEMON_OPTS="$DAEMON_OPTS -web.console.templates={{ prometheus_daemon_dir }}/consoles  -web.console.libraries={{ prometheus_daemon_dir }}/console_libraries"
 
 
 

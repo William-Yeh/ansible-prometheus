@@ -32,7 +32,7 @@ GOSU=/usr/local/bin/gosu
 
 
 
-DAEMON_OPTS=
+DAEMON_OPTS=-silences.file="{{ prometheus_alertmanager_db_path }}/silences.json"
 
 {% if prometheus_alertmanager_conf is defined %}
 DAEMON_OPTS="$DAEMON_OPTS -config.file=$CONFIG"
@@ -66,8 +66,8 @@ service_checks() {
   fi
 
   # Prepare directories
-  mkdir -p "{{ prometheus_pid_path }}" "{{ prometheus_log_path }}"
-  chown -R $USER "{{ prometheus_pid_path }}" "{{ prometheus_log_path }}"
+  mkdir -p "{{ prometheus_pid_path }}" "{{ prometheus_log_path }}" "{{ prometheus_alertmanager_db_path }}"
+  chown -R $USER "{{ prometheus_pid_path }}" "{{ prometheus_log_path }}" "{{ prometheus_alertmanager_db_path }}"
 
   # Check if PID exists
   if [ -f "$PID" ]; then

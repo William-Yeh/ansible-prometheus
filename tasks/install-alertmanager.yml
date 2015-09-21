@@ -19,7 +19,7 @@
 
 
 
-- name: mkdir for data
+- name: mkdir for data (silences.json for now)
   file:
     path: "{{ item }}"
     state: directory
@@ -27,7 +27,7 @@
     group: "{{ prometheus_group }}"
     mode: "u=rwx,g=rx,o="
   with_items:
-    - "{{ prometheus_db_path }}"
+    - "{{ prometheus_alertmanager_db_path }}"
 
 
 - name: download alertmanager tarball
