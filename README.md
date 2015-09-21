@@ -145,7 +145,7 @@ User-configurable defaults:
 
 ```yaml
 # which version?
-prometheus_alertmanager_version:  0.0.3
+prometheus_alertmanager_version:  0.0.4
 
 # directory for runtime database
 prometheus_alertmanager_db_path: /var/lib/alertmanager
