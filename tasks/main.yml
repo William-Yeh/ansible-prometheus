@@ -9,10 +9,14 @@
 - name: set role variables, if necessary
   include: set-role-variables.yml
 
-
 - name: install libselinux-python binary for Ansible to work
   yum: name=libselinux-python state=present
   when: ansible_pkg_mgr == "yum"
+
+- name: install dependencies for compiling Prometheus source code
+  include: install-compile-tools.yml
+  when: prometheus_alertmanager_version == "git" or prometheus_node_exporter_version == "git" or prometheus_version == "git"
+
 
 
 - name: create Prometheus group

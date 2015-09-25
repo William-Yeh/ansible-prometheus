@@ -1,0 +1,23 @@
+---
+# file: tasks/install-git-tools.yml
+# Top-level installer tools required for compiling Prometheus sources.
+#
+# @see https://github.com/prometheus/prometheus
+#
+
+- name: install dependencies for installation of components from source
+  action: "{{ ansible_pkg_mgr }} name={{ item }} state=present"
+  with_items:
+    - git
+    - mercurial
+    - gzip
+    - wget
+    - curl
+
+- name: install make
+  yum: name=make state=present
+  when: ansible_pkg_mgr == "yum"
+
+- name: install make
+  apt: name=build-essential state=present
+  when: ansible_pkg_mgr == "apt"

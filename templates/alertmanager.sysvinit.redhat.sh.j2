@@ -27,7 +27,7 @@ USER={{ prometheus_user }}
 CONFIG={{ prometheus_config_path }}/alertmanager.conf
 PID="{{ prometheus_pid_path }}/$NAME.pid"
 LOG="{{ prometheus_log_path }}/$NAME.log"
-CHDIR="{{ prometheus_db_path }}"
+CHDIR="{{ prometheus_alertmanager_db_path }}"
 GOSU=/usr/local/bin/gosu
 
 

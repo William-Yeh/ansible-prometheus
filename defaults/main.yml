@@ -34,6 +34,10 @@ prometheus_download_path:     /tmp
 prometheus_clean_tarball:     true
 
 
+# rebuild each time?  (only applied to `git` version)
+prometheus_rebuild:           false
+
+
 #
 # derived variables; internal use only.
 #
