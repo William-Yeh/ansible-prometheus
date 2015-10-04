@@ -88,6 +88,9 @@ prometheus_file_sd_config_path:  {{ prometheus_config_path }}/tgroups
 
 # directory for runtime database
 prometheus_db_path:   /var/lib/prometheus
+
+# Web listening address
+prometheus_web_listen_addr: ":9090"
 ```
 
 
