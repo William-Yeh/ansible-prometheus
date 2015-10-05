@@ -38,6 +38,9 @@ DAEMON_OPTS=-silences.file="{{ prometheus_alertmanager_db_path }}/silences.json"
 DAEMON_OPTS="$DAEMON_OPTS -config.file=$CONFIG"
 {% endif %}
 
+{% if prometheus_alertmanager_opts is defined %}
+DAEMON_OPTS="$DAEMON_OPTS {{ prometheus_alertmanager_opts }}"
+{$ endif %}
 
 RETVAL=0
 

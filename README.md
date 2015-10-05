@@ -126,6 +126,13 @@ prometheus_alertmanager_url
 ```
 
 
+Additional command-line arguments, if any (use `prometheus --help` to see the full list of arguments):
+
+```yaml
+prometheus_opts
+```
+
+
 ### Optional variables: Node exporter
 
 
@@ -136,6 +143,11 @@ User-configurable defaults:
 prometheus_node_exporter_version:  0.11.0
 ```
 
+Additional command-line arguments, if any (use `node_exporter --help` to see the full list of arguments):
+
+```yaml
+prometheus_node_exporter_opts
+```
 
 
 ### Optional variables: Alertmanager
@@ -155,11 +167,16 @@ prometheus_alertmanager_db_path: /var/lib/alertmanager
 
 User-installable alertmanager conf file (see [doc](http://prometheus.io/docs/alerting/alertmanager/) for details):
 
-
 ```yaml
 # main conf template relative to `playbook_dir`;
 # to be installed to "{{ prometheus_config_path }}/alertmanager.conf"
 prometheus_alertmanager_conf
+```
+
+Additional command-line arguments, if any (use `alertmanager --help` to see the full list of arguments):
+
+```yaml
+prometheus_alertmanager_opts
 ```
 
 

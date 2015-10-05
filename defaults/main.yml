@@ -13,7 +13,7 @@
 prometheus_user:   prometheus
 prometheus_group:  prometheus
 
-prometheus_version:                 0.16.0rc1
+prometheus_version:                 0.16.0rc2
 prometheus_node_exporter_version:   0.11.0
 prometheus_alertmanager_version:    0.0.4
 gosu_version:  1.4
