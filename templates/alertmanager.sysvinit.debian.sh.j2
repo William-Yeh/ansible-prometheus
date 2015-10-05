@@ -40,7 +40,7 @@ DAEMON_OPTS="$DAEMON_OPTS -config.file=$CONFIG"
 
 {% if prometheus_alertmanager_opts is defined %}
 DAEMON_OPTS="$DAEMON_OPTS {{ prometheus_alertmanager_opts }}"
-{$ endif %}
+{% endif %}
 
 
 
