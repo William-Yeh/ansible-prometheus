@@ -1,15 +1,17 @@
 global:
-  scrape_interval:     15s  # default = every 15 seconds.
-  evaluation_interval: 15s  # default = every 15 seconds.
-  # scrape_timeout is set to the global default (10s).
+  scrape_interval:     1m   # How frequently to scrape targets by default.
+  scrape_timeout:      10s  # How long until a scrape request times out.
+  evaluation_interval: 1m   # How frequently to evaluate rules by default.
 
-  # Attach these extra labels to all timeseries collected by this Prometheus instance.
-  labels:
+  # The labels to add to any time series or alerts when communicating with
+  # external systems (federation, remote storage, Alertmanager).
+  external_labels:
     monitor: 'master'
 
 
 
 {% if prometheus_rule_files is defined %}
+# Rule files specifies a list of files from which rules are read.
 rule_files:
   {% for (key, value) in prometheus_rule_files.iteritems() %}
   - {{ prometheus_rule_path }}/{{ value.dest }}
@@ -18,7 +20,7 @@ rule_files:
 
 
 
-
+# A list of scrape configurations.
 scrape_configs:
 
   - job_name: 'prometheus'
