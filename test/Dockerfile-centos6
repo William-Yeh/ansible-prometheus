@@ -27,7 +27,7 @@ RUN ansible-playbook-wrapper -vvv
 #
 
 RUN echo "==> Removing PID files..."  && \
-    rm -f /var/run/prometheus/* 
+    rm -f /var/run/prometheus/*
 
 RUN echo "===> Installing curl for testing purpose..."  && \
     yum -y install curl
@@ -36,4 +36,10 @@ RUN echo "===> Installing curl for testing purpose..."  && \
 VOLUME ["/data"]
 ENV    RESULT     /data/result-centos6
 
-CMD  service node_exporter start  &&  sleep 10  &&  service prometheus start  &&  sleep 10  &&  curl --retry 5 --retry-max-time 120  http://localhost:9090/metrics  > $RESULT  &&  curl --retry 5 --retry-max-time 120  http://localhost:9100/metrics  >> $RESULT
+CMD  \
+     service node_exporter start  &&  sleep 10  &&  \
+     service alertmanager start   &&  sleep 10  &&  \
+     service prometheus start     &&  sleep 10  &&  \
+     curl --retry 5 --retry-max-time 120  http://localhost:9090/metrics  > $RESULT  && \
+     curl --retry 5 --retry-max-time 120  http://localhost:9093/metrics  >> $RESULT  && \
+     curl --retry 5 --retry-max-time 120  http://localhost:9100/metrics  >> $RESULT

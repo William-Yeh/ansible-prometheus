@@ -159,11 +159,9 @@ User-configurable defaults:
 # which version?
 prometheus_alertmanager_version:  0.0.4
 
-# directory for runtime database
+# directory for runtime database (currently for `silences.json`)
 prometheus_alertmanager_db_path: /var/lib/alertmanager
 ```
-
-
 
 User-installable alertmanager conf file (see [doc](http://prometheus.io/docs/alerting/alertmanager/) for details):
 

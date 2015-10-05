@@ -82,12 +82,18 @@
 - name: set INIT status
   service: name=alertmanager enabled=yes
 
-- name: set INIT status and start
-  service: name=alertmanager state=started
-  when: prometheus_use_service|bool
+#- name: set INIT status and start
+#  service: name=alertmanager state=started
+#  when: prometheus_use_service|bool
 
-- name: copy alertmanager main config file from playbook's, if any
+- name: install alertmanager config file from playbook's, if any
   template: src="{{ playbook_dir }}/{{ prometheus_alertmanager_conf }}"  dest="{{ prometheus_config_path }}/alertmanager.conf"
   when: prometheus_alertmanager_conf is defined
+  notify:
+    - restart alertmanager
+
+- name: install default (empty) alertmanager config file, if necessary
+  copy: src="../files/alertmanager.empty.conf"  dest="{{ prometheus_config_path }}/alertmanager.conf"
+  when: prometheus_alertmanager_conf is not defined
   notify:
     - restart alertmanager

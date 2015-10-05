@@ -32,11 +32,7 @@ GOSU=/usr/local/bin/gosu
 
 
 
-DAEMON_OPTS=-silences.file="{{ prometheus_alertmanager_db_path }}/silences.json"
-
-{% if prometheus_alertmanager_conf is defined %}
-DAEMON_OPTS="$DAEMON_OPTS -config.file=$CONFIG"
-{% endif %}
+DAEMON_OPTS="-config.file=$CONFIG  -silences.file={{ prometheus_alertmanager_db_path }}/silences.json "
 
 {% if prometheus_alertmanager_opts is defined %}
 DAEMON_OPTS="$DAEMON_OPTS {{ prometheus_alertmanager_opts }}"
@@ -99,7 +95,7 @@ reload() {
   RETVAL=$?
 }
 
-chdir $CHDIR
+#chdir $CHDIR
 
 case "$1" in
   start)
