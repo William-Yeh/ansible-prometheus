@@ -76,7 +76,7 @@ User-configurable defaults:
 
 ```yaml
 # which version?
-prometheus_version:  0.15.1
+prometheus_version:  0.16.1
 
 
 
