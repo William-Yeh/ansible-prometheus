@@ -210,6 +210,12 @@ User-configurable defaults:
 prometheus_consul_exporter_version:  0.2.0
 ```
 
+Additional command-line arguments, if any (use `consul_exporter --help` to see the full list of arguments):
+
+```yaml
+prometheus_consul_exporter_opts
+```
+
 ## Handlers
 
 Prometheus server:
