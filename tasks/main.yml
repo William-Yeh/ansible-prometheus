@@ -15,7 +15,7 @@
 
 - name: install dependencies for compiling Prometheus source code
   include: install-compile-tools.yml
-  when: prometheus_alertmanager_version == "git" or prometheus_node_exporter_version == "git" or prometheus_version == "git" or prometheus_consul_version == "git"
+  when: prometheus_alertmanager_version == "git" or prometheus_node_exporter_version == "git" or prometheus_version == "git" or prometheus_consul_exporter_version == "git"
 
 
 
