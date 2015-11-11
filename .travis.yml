@@ -59,8 +59,10 @@ script:
     - grep '^alertmanager_config' result-centos7-git
 
     - grep '^consul_catalog_services' result-ubuntu14.04
-    - grep '^consul_catalog_services' result-ubuntu12.04
     - grep '^consul_catalog_services' result-ubuntu14.04-git
+
+    # Consul role does not yet support Ubuntu 12.04
+    # - grep '^consul_catalog_services' result-ubuntu12.04
 
     # Centos Docker image is not running SystemD so the Consul role fails
     # - grep '^consul_catalog_services' result-centos7

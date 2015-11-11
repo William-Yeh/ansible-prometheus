@@ -14,10 +14,7 @@ MAINTAINER William Yeh <william.pjyeh@gmail.com>
 # build phase
 #
 
-ENV PLAYBOOK test_with_consul.yml
-RUN echo "===> Installing git for ansible galaxy..."  && \
-    DEBIAN_FRONTEND=noninteractive  \
-    apt-get install -y -f git
+ENV PLAYBOOK test.yml
 RUN ansible-playbook-wrapper
 
 
@@ -41,8 +38,6 @@ CMD  \
      service node_exporter start   &&  sleep 10  &&  \
      service alertmanager start    &&  sleep 10  &&  \
      service prometheus start      &&  sleep 10  &&  \
-     service consul_exporter start &&  sleep 10  &&  \
      curl --retry 5 --retry-max-time 120  http://localhost:9090/metrics  > $RESULT  && \
      curl --retry 5 --retry-max-time 120  http://localhost:9093/metrics  >> $RESULT  && \
-     curl --retry 5 --retry-max-time 120  http://localhost:9100/metrics  >> $RESULT  && \
-     curl --retry 5 --retry-max-time 120  http://localhost:9107/metrics  >> $RESULT
+     curl --retry 5 --retry-max-time 120  http://localhost:9100/metrics  >> $RESULT
