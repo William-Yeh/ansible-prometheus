@@ -16,6 +16,8 @@ prometheus_group:  prometheus
 prometheus_version:                 0.16.1
 prometheus_node_exporter_version:   0.11.0
 prometheus_alertmanager_version:    0.0.4
+prometheus_consul_exporter_version: 0.2.0
+
 gosu_version:  1.4
 
 

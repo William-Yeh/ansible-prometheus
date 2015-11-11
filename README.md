@@ -12,7 +12,7 @@ Role name in Ansible Galaxy: **[williamyeh.prometheus](https://galaxy.ansible.co
 
 This Ansible role has the following features for [Prometheus](http://prometheus.io/):
 
- - Install specific versions of [Prometheus server](https://github.com/prometheus/prometheus), [Node exporter](https://github.com/prometheus/node_exporter), and [Alertmanager](https://github.com/prometheus/alertmanager).
+ - Install specific versions of [Prometheus server](https://github.com/prometheus/prometheus), [Node exporter](https://github.com/prometheus/node_exporter), [Alertmanager](https://github.com/prometheus/alertmanager), and [Consul exporter](https://github.com/prometheus/consul_exporter).
  - Handlers for restart/reload/stop events;
  - Bare bone configuration (*real* configuration should be left to user's template files; see **Usage** section below).
 
@@ -43,6 +43,7 @@ prometheus_group:  prometheus
 # possible values:
 #  - "prometheus"
 #  - "node_exporter"
+#  - "consul_exporter"
 #  - "alertmanager"
 prometheus_components: [ "prometheus", "node_exporter" ]
 
@@ -198,6 +199,16 @@ If you'd like to force rebuild each time, enable the following variable (default
 prometheus_rebuild: true
 ```
 
+### Optional variables: Consul exporter
+
+You can also set the version to `git` to get the latest source code from the repository and compile it. There are no external requirements needed.
+
+User-configurable defaults:
+
+```yaml
+# which version?
+prometheus_consul_exporter_version:  0.2.0
+```
 
 ## Handlers
 
