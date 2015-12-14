@@ -201,6 +201,7 @@ prometheus_rebuild: true
 
 ### Optional variables: Consul exporter
 
+Set the specific version of consul_exporter in variable `prometheus_consul_exporter_version`.
 You can also set the version to `git` to get the latest source code from the repository and compile it. There are no external requirements needed.
 
 User-configurable defaults:
@@ -304,14 +305,21 @@ More practical example:
 
 Open the page in your browser:
 
-- Prometheus - `http://`HOST`:9090` or `http://`HOST`:9090/consoles/node.html`
+- Prometheus - `http://HOST:9090` or `http://HOST:9090/consoles/node.html`
 
-- Alertmanager - `http://`HOST`:9093`
+- Alertmanager - `http://HOST:9093`
 
 
 ## Dependencies
 
 None.
+
+
+## Contributors
+
+- [William Yeh](https://github.com/William-Yeh)
+- [Robbie Trencheny](https://github.com/robbiet480)
+- [Travis Truman](https://github.com/trumant)
 
 
 ## License

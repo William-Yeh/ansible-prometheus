@@ -48,6 +48,11 @@ script:
     - grep '^prometheus_target_interval_length_seconds' result-debian8-git
     - grep '^prometheus_target_interval_length_seconds' result-centos7-git
 
+
+    #-------------------------
+    # for alertmanager
+    #
+
     - grep '^alertmanager_config' result-ubuntu14.04
     - grep '^alertmanager_config' result-ubuntu12.04
     - grep '^alertmanager_config' result-debian8
@@ -57,6 +62,11 @@ script:
     - grep '^alertmanager_config' result-ubuntu14.04-git
     - grep '^alertmanager_config' result-debian8-git
     - grep '^alertmanager_config' result-centos7-git
+
+
+    #-------------------------
+    # for consul_exporter
+    #
 
     - grep '^consul_catalog_services' result-ubuntu14.04
     - grep '^consul_catalog_services' result-ubuntu14.04-git
