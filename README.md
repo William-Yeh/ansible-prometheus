@@ -8,11 +8,11 @@ williamyeh.prometheus for Ansible Galaxy
 
 ## Summary
 
-Role name in Ansible Galaxy: **[williamyeh.prometheus](https://galaxy.ansible.com/list#/roles/4357)**
+Role name in Ansible Galaxy: **[williamyeh.prometheus](https://galaxy.ansible.com/detail#/role/4357)**
 
 This Ansible role has the following features for [Prometheus](http://prometheus.io/):
 
- - Install specific versions of [Prometheus server](https://github.com/prometheus/prometheus), [Node exporter](https://github.com/prometheus/node_exporter), [Alertmanager](https://github.com/prometheus/alertmanager), and [Consul exporter](https://github.com/prometheus/consul_exporter).
+ - Install specific versions of [Prometheus server](https://github.com/prometheus/prometheus), [Node exporter](https://github.com/prometheus/node_exporter), [Alertmanager](https://github.com/prometheus/alertmanager), and [Consul exporter](https://github.com/prometheus/consul_exporter);
  - Handlers for restart/reload/stop events;
  - Bare bone configuration (*real* configuration should be left to user's template files; see **Usage** section below).
 
@@ -28,7 +28,7 @@ None.
 
 
 
-### Optional variables: genaral settings
+### Optional variables: general settings
 
 
 User-configurable defaults:
@@ -41,10 +41,10 @@ prometheus_group:  prometheus
 
 # which components to install?
 # possible values:
-#  - "prometheus"
-#  - "node_exporter"
-#  - "consul_exporter"
+#  - "prometheus" (default)
+#  - "node_exporter" (default)
 #  - "alertmanager"
+#  - "consul_exporter"
 prometheus_components: [ "prometheus", "node_exporter" ]
 
 
@@ -67,7 +67,7 @@ prometheus_download_path:  /tmp
 
 
 # version of helper utility "gosu"
-gosu_version:  1.4
+gosu_version:  1.7
 ```
 
 
