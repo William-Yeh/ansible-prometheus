@@ -24,7 +24,20 @@ This Ansible role has the following features for [Prometheus](http://prometheus.
 
 ### Mandatory variables
 
-None.
+The components to be installed:
+
+```yaml
+# Supported components:
+#   [Core Prometheus components]
+#      - "prometheus"
+#      - "node_exporter"
+#      - "alertmanager"
+#  
+#   [Third-party components]
+#      - "consul_exporter"
+#
+prometheus_components
+```
 
 
 
@@ -37,15 +50,6 @@ User-configurable defaults:
 # user and group
 prometheus_user:   prometheus
 prometheus_group:  prometheus
-
-
-# which components to install?
-# possible values:
-#  - "prometheus" (default)
-#  - "node_exporter" (default)
-#  - "alertmanager"
-#  - "consul_exporter"
-prometheus_components: [ "prometheus", "node_exporter" ]
 
 
 # directory for executable files
@@ -181,6 +185,8 @@ prometheus_alertmanager_opts
 
 ### Optional: building from source
 
+(Credit: [Robbie Trencheny](https://github.com/robbiet480))
+
 For aforementioned `prometheus_components`, you can optionally download/compile from the *master* branch of Prometheus repositories by setting the respective version to `git`.
 
 There are no external requirements needed to compile from source, as Prometheus provides them all via the install scripts. Git, Mercurial, GZip, Curl, and Wget will be installed from your package manager (yum or apt). If you already have all dependencies, nothing will be installed.
@@ -200,6 +206,8 @@ prometheus_rebuild: true
 ```
 
 ### Optional variables: Consul exporter
+
+(Credit: [Travis Truman](https://github.com/trumant))
 
 Set the specific version of consul_exporter in variable `prometheus_consul_exporter_version`.
 You can also set the version to `git` to get the latest source code from the repository and compile it. There are no external requirements needed.
@@ -292,6 +300,11 @@ More practical example:
     - williamyeh.prometheus
 
   vars:
+    prometheus_components:
+      - prometheus
+      - node_exporter
+      - alertmanager
+
     prometheus_rule_files:
       this_is_rule_1_InstanceDown:
         src:  some/path/basic.rules
