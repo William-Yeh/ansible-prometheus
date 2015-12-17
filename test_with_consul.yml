@@ -14,10 +14,12 @@
     #prometheus_components: [ "alertmanager" ]
     prometheus_components: [ "prometheus", "node_exporter", "alertmanager", "consul_exporter" ]
 
-    prometheus_rule_files:
-      this_is_rule_1_InstanceDown:
-        src:  test/basic.rules
-        dest: basic.rules
+
+    #prometheus_rule_files:
+    #  this_is_rule_1_InstanceDown:
+    #    src:  test/basic.rules
+    #    dest: basic.rules
+
 
     prometheus_alertmanager_url: "http://localhost:9093/"
 

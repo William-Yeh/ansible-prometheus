@@ -28,13 +28,14 @@ The components to be installed:
 
 ```yaml
 # Supported components:
-#   [Core Prometheus components]
-#      - "prometheus"
-#      - "node_exporter"
-#      - "alertmanager"
-#  
-#   [Third-party components]
-#      - "consul_exporter"
+#
+#   [Server components]
+#     - "prometheus"
+#     - "alertmanager"
+#    
+#   [Exporter components]
+#     - "node_exporter"
+#     - "consul_exporter"
 #
 prometheus_components
 ```
@@ -183,34 +184,9 @@ prometheus_alertmanager_opts
 ```
 
 
-### Optional: building from source
-
-(Credit: [Robbie Trencheny](https://github.com/robbiet480))
-
-For aforementioned `prometheus_components`, you can optionally download/compile from the *master* branch of Prometheus repositories by setting the respective version to `git`.
-
-There are no external requirements needed to compile from source, as Prometheus provides them all via the install scripts. Git, Mercurial, GZip, Curl, and Wget will be installed from your package manager (yum or apt). If you already have all dependencies, nothing will be installed.
-
-For example, you can set all three variables to `git` to get the latest code for each component:
-
-```yaml
-prometheus_version: git
-prometheus_node_exporter_version: git
-prometheus_alertmanager_version: git
-```
-
-If you'd like to force rebuild each time, enable the following variable (default is `false`):
-
-```yaml
-prometheus_rebuild: true
-```
-
 ### Optional variables: Consul exporter
 
 (Credit: [Travis Truman](https://github.com/trumant))
-
-Set the specific version of consul_exporter in variable `prometheus_consul_exporter_version`.
-You can also set the version to `git` to get the latest source code from the repository and compile it. There are no external requirements needed.
 
 User-configurable defaults:
 
@@ -224,6 +200,32 @@ Additional command-line arguments, if any (use `consul_exporter --help` to see t
 ```yaml
 prometheus_consul_exporter_opts
 ```
+
+
+### Optional: building from source tree
+
+(Credit: [Robbie Trencheny](https://github.com/robbiet480))
+
+For aforementioned `prometheus_components`, you can optionally download/compile from the *master* branch of [Prometheus repositories](https://github.com/prometheus) by setting the respective version to `git`.
+
+There are no external requirements needed to compile from source, as Prometheus provides them all via the install scripts. Git, Mercurial, GZip, Curl, and Wget will be installed from your package manager (yum or apt). If you already have all dependencies, nothing will be installed.
+
+For example, get the latest code for all components by assigning all `*_version` variables to `git`:
+
+```yaml
+prometheus_version: git
+prometheus_node_exporter_version: git
+prometheus_alertmanager_version: git
+prometheus_consul_exporter_version: git
+```
+
+If you'd like to force rebuild each time, enable the following variable (default is `false`):
+
+```yaml
+prometheus_rebuild: true
+```
+
+
 
 ## Handlers
 
