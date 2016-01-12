@@ -70,8 +70,11 @@ service_checks() {
 
   # Check if PID exists
   if [ -f "$PID" ]; then
-    pgrep --pidfile $PID
-    if [ "$?" -eq 0 ]; then
+    PID_NUMBER=`cat $PID`
+    if [ -z "`ps axf | grep ${PID_NUMBER} | grep -v grep`" ]; then
+      echo "Service was aborted abnormally; clean the PID file and continue..."
+      rm -f "$PID"
+    else
       echo "Service already started; skip..."
       exit 1
     fi
