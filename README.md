@@ -32,7 +32,7 @@ The components to be installed:
 #   [Server components]
 #     - "prometheus"
 #     - "alertmanager"
-#    
+#
 #   [Exporter components]
 #     - "node_exporter"
 #     - "consul_exporter"
@@ -276,7 +276,7 @@ Simple example:
 # file: simple-playbook.yml
 
 - hosts: all
-  sudo: True
+  become: True
   roles:
     - williamyeh.prometheus
 
@@ -297,7 +297,7 @@ More practical example:
 # file: complex-playbook.yml
 
 - hosts: all
-  sudo: True
+  become: True
   roles:
     - williamyeh.prometheus
 

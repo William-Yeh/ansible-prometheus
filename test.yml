@@ -1,5 +1,5 @@
 - hosts: all
-  sudo: True
+  become: True
   tasks:
     - include: 'tasks/main.yml'
   handlers:
