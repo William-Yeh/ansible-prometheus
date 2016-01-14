@@ -173,7 +173,7 @@ User-installable alertmanager conf file (see [doc](http://prometheus.io/docs/ale
 
 ```yaml
 # main conf template relative to `playbook_dir`;
-# to be installed to "{{ prometheus_config_path }}/alertmanager.conf"
+# to be installed to "{{ prometheus_config_path }}/alertmanager.yml"
 prometheus_alertmanager_conf
 ```
 
@@ -312,7 +312,7 @@ More practical example:
         src:  some/path/basic.rules
         dest: basic.rules
 
-    prometheus_alertmanager_conf: some/path/alertmanager.conf.j2
+    prometheus_alertmanager_conf: some/path/alertmanager.yml.j2
 ```
 
 

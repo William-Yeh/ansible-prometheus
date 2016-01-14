@@ -5,7 +5,8 @@
 
 
 # pull base image
-FROM williamyeh/ansible:centos7-onbuild
+FROM williamyeh/ansible:master-centos7-onbuild
+#FROM williamyeh/ansible:centos7-onbuild
 
 MAINTAINER William Yeh <william.pjyeh@gmail.com>
 
@@ -44,5 +45,5 @@ CMD  \
      /etc/init.d/alertmanager start   &&  sleep 10  &&  \
      /etc/init.d/prometheus start     &&  sleep 60  &&  \
      curl --retry 5 --retry-max-time 120  http://localhost:9100/metrics  > $RESULT   && \
-     curl --retry 5 --retry-max-time 120  http://localhost:9093/metrics  >> $RESULT  && \
+     curl --retry 5 --retry-max-time 120  http://localhost:9093/         >> $RESULT  && \
      curl --retry 5 --retry-max-time 120  http://localhost:9090/metrics  >> $RESULT

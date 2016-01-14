@@ -48,6 +48,6 @@ CMD  \
      service prometheus start      &&  sleep 60  &&  \
      service consul_exporter start &&  sleep 10  &&  \
      curl --retry 5 --retry-max-time 120  http://localhost:9100/metrics  > $RESULT   && \
-     curl --retry 5 --retry-max-time 120  http://localhost:9093/metrics  >> $RESULT  && \
+     curl --retry 5 --retry-max-time 120  http://localhost:9093/         >> $RESULT  && \
      curl --retry 5 --retry-max-time 120  http://localhost:9090/metrics  >> $RESULT  && \
      curl --retry 5 --retry-max-time 120  http://localhost:9107/metrics  >> $RESULT

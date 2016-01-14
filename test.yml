@@ -13,6 +13,7 @@
     #prometheus_components: [ "node_exporter" ]
     #prometheus_components: [ "alertmanager" ]
     prometheus_components: [ "prometheus", "node_exporter", "alertmanager" ]
+    #prometheus_alertmanager_version: git
 
 
     #prometheus_rule_files:
@@ -23,7 +24,7 @@
 
     prometheus_alertmanager_url: "http://localhost:9093/"
 
-    prometheus_alertmanager_conf: test/alertmanager.conf.j2
+    #prometheus_alertmanager_conf: test/alertmanager.yml.j2
 
   post_tasks:
     - name: copy file_sd

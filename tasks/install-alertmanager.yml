@@ -6,53 +6,90 @@
 # @see http://prometheus.io/docs/introduction/getting_started/
 #
 
-- name: set internal variables for convenience
-  set_fact:
-    prometheus_alertmanager_tarball_url: "https://github.com/prometheus/alertmanager/releases/download/{{ prometheus_alertmanager_version }}/alertmanager-{{ prometheus_alertmanager_version }}.linux-amd64.tar.gz"
-    prometheus_alertmanager_untar_path: "{{ prometheus_install_path }}"
-  when: prometheus_alertmanager_version != "git" and ansible_userspace_bits == "64"
+- block:
 
-- name: set internal variables for convenience
-  set_fact:
-    prometheus_alertmanager_tarball_url: "https://github.com/prometheus/alertmanager/releases/download/{{ prometheus_alertmanager_version }}/alertmanager-{{ prometheus_alertmanager_version }}.linux-386.tar.gz"
-    prometheus_alertmanager_untar_path: "{{ prometheus_install_path }}"
-  when: prometheus_alertmanager_version != "git" and ansible_userspace_bits == "32"
+    - name: set internal variables for convenience
+      set_fact:
+        prometheus_alertmanager_tarball_url: "https://github.com/prometheus/alertmanager/releases/download/{{ prometheus_alertmanager_version }}/alertmanager-{{ prometheus_alertmanager_version }}.linux-amd64.tar.gz"
+        prometheus_alertmanager_untar_path: "{{ prometheus_install_path }}"
+      when: ansible_userspace_bits == "64"
 
-- name: set internal variables for convenience
-  set_fact:
-    prometheus_alertmanager_tarball_url: "https://github.com/prometheus/alertmanager/archive/master.tar.gz"
-    prometheus_alertmanager_untar_path: "{{ prometheus_download_path }}"
+    - name: set internal variables for convenience
+      set_fact:
+        prometheus_alertmanager_tarball_url: "https://github.com/prometheus/alertmanager/releases/download/{{ prometheus_alertmanager_version }}/alertmanager-{{ prometheus_alertmanager_version }}.linux-386.tar.gz"
+        prometheus_alertmanager_untar_path: "{{ prometheus_install_path }}"
+      when: ansible_userspace_bits == "32"
+
+    - name: download and uncompress alertmanager tarball
+      unarchive:
+        src: "{{ prometheus_alertmanager_tarball_url }}"
+        dest: "{{ prometheus_alertmanager_untar_path }}"
+        copy: no
+
+  when: prometheus_alertmanager_version != "git"
+
+
+- block:
+
+    - name: set internal variables for convenience
+      set_fact:
+        prometheus_gopath: "{{ prometheus_download_path }}/prometheus_workdir"
+        prometheus_alertmanager_git_url: "https://github.com/prometheus/alertmanager.git"
+        prometheus_alertmanager_src_path: "{{ prometheus_download_path }}/prometheus_workdir/src/github.com/prometheus/alertmanager"
+
+
+    - name: delete the alertmanager build directory, if necessary
+      file: path="{{ prometheus_alertmanager_src_path }}" state=absent
+      when: prometheus_rebuild
+
+    - name: install git, if necessary
+      package: name=git state=present
+
+    - name: install gcc-related stuff
+      yum: name={{ item }} state=present
+      with_items:
+        - glibc-static
+        - gcc
+      when: ansible_pkg_mgr == "yum"
+
+    - name: install gcc-related stuff
+      apt: name={{ item }} state=present
+      with_items:
+        - libc6-dev
+      when: ansible_pkg_mgr == "apt"
+
+    - name: clone the alertmanager project src
+      git:
+        repo: "{{ prometheus_alertmanager_git_url }}"
+        dest: "{{prometheus_alertmanager_src_path }}"
+        force: yes
+
+    - name: install temporary Go compiler
+      shell: "{{ prometheus_alertmanager_src_path }}/scripts/goenv.sh {{ prometheus_download_path }}/prometheus_workdir/go {{ prometheus_download_path }}/prometheus_workdir/gopath"
+
+    - name: determine installed Go version
+      command: "ls {{ prometheus_download_path }}/prometheus_workdir/go/"
+      when: prometheus_alertmanager_version == "git"
+      changed_when: false
+      register: go_version
+
+    - name: build alertmanager source code
+      command: make
+      args:
+        chdir: "{{ prometheus_alertmanager_src_path }}"
+        creates: alertmanager
+      environment:
+        PATH: "{{ ansible_env.PATH }}:{{ prometheus_download_path }}/prometheus_workdir/go/{{ go_version.stdout }}/bin"
+        GOPATH: "{{ prometheus_gopath }}"
+        GOROOT: "{{ prometheus_download_path }}/prometheus_workdir/go/{{ go_version.stdout }}"
+
+    - name: copy the built alertmanager to the install path
+      command: "cp {{ prometheus_alertmanager_src_path }}/alertmanager {{ prometheus_install_path }}"
+      args:
+        creates: "{{ prometheus_install_path }}/alertmanager"
+
   when: prometheus_alertmanager_version == "git"
 
-
-- name: delete the alertmanager build directory, if necessary
-  file: path="{{ prometheus_alertmanager_untar_path }}/alertmanager-master" state=absent
-  when: prometheus_alertmanager_version == "git" and prometheus_rebuild
-
-
-
-
-- name: download alertmanager tarball
-  get_url: url="{{ prometheus_alertmanager_tarball_url }}" dest="{{ prometheus_download_path }}/alertmanager.tar.gz" force=yes
-
-- name: untar alertmanager tarball
-  unarchive:
-    src: "{{ prometheus_download_path }}/alertmanager.tar.gz"
-    dest: "{{ prometheus_alertmanager_untar_path }}"
-    copy: no
-
-- name: build alertmanager source code
-  command: make
-  args:
-    chdir: "{{ prometheus_alertmanager_untar_path }}/alertmanager-master"
-    creates: alertmanager
-  when: prometheus_alertmanager_version == "git"
-
-- name: copy the built alertmanager to the install path
-  command: "cp {{ prometheus_alertmanager_untar_path }}/alertmanager-master/alertmanager {{ prometheus_install_path }}"
-  args:
-    creates: "{{ prometheus_install_path }}/alertmanager"
-  when: prometheus_alertmanager_version == "git"
 
 
 
@@ -87,13 +124,13 @@
 #  when: prometheus_use_service|bool
 
 - name: install alertmanager config file from playbook's, if any
-  template: src="{{ playbook_dir }}/{{ prometheus_alertmanager_conf }}"  dest="{{ prometheus_config_path }}/alertmanager.conf"
+  template: src="{{ playbook_dir }}/{{ prometheus_alertmanager_conf }}"  dest="{{ prometheus_config_path }}/alertmanager.yml"
   when: prometheus_alertmanager_conf is defined
   notify:
     - restart alertmanager
 
 - name: install default (empty) alertmanager config file, if necessary
-  copy: src="../files/alertmanager.empty.conf"  dest="{{ prometheus_config_path }}/alertmanager.conf"
+  copy: src="../files/alertmanager.empty.yml"  dest="{{ prometheus_config_path }}/alertmanager.yml"
   when: prometheus_alertmanager_conf is not defined
   notify:
     - restart alertmanager

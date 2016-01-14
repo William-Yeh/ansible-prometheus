@@ -24,7 +24,7 @@ NAME=alertmanager
 DESC="Prometheus Alertmanager"
 DAEMON={{ prometheus_install_path }}/alertmanager
 USER={{ prometheus_user }}
-CONFIG={{ prometheus_config_path }}/alertmanager.conf
+CONFIG={{ prometheus_config_path }}/alertmanager.yml
 PID="{{ prometheus_pid_path }}/$NAME.pid"
 LOG="{{ prometheus_log_path }}/$NAME.log"
 CHDIR="{{ prometheus_alertmanager_db_path }}"
@@ -32,7 +32,7 @@ GOSU=/usr/local/bin/gosu
 
 
 
-DAEMON_OPTS="-config.file=$CONFIG  -silences.file={{ prometheus_alertmanager_db_path }}/silences.json "
+DAEMON_OPTS="-config.file=$CONFIG  -storage.path={{ prometheus_alertmanager_db_path }} "
 
 {% if prometheus_alertmanager_opts is defined %}
 DAEMON_OPTS="$DAEMON_OPTS {{ prometheus_alertmanager_opts }}"

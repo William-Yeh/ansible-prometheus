@@ -20,6 +20,11 @@ Vagrant.configure(2) do |config|
         # Alertmanager UI port
         node.vm.network :forwarded_port, guest: 9093, host: 9093
 
+
+       node.vm.provider "virtualbox" do |vb|
+          vb.customize ["modifyvm", :id, "--memory", "1024"]
+       end
+
     end
 
 
@@ -35,6 +40,7 @@ Vagrant.configure(2) do |config|
             docker build  -f test/Dockerfile-debian7      -t prometheus_wheezy   .
             docker build  -f test/Dockerfile-centos7      -t prometheus_centos7  .
             docker build  -f test/Dockerfile-centos6      -t prometheus_centos6  .
+            docker build  -f test/Dockerfile-ubuntu14.04-git -t prometheus_trusty_git .
         SHELL
     end
 

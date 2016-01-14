@@ -23,7 +23,7 @@
 
     prometheus_alertmanager_url: "http://localhost:9093/"
 
-    prometheus_alertmanager_conf: test/alertmanager.conf.j2
+    #prometheus_alertmanager_conf: test/alertmanager.conf.j2
 
   roles:
     - { role: consul,

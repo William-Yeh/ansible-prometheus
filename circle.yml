@@ -56,15 +56,15 @@ test:
     # for alertmanager
     #
 
-    - grep '^alertmanager_config' result-ubuntu14.04
-    - grep '^alertmanager_config' result-ubuntu12.04
-    - grep '^alertmanager_config' result-debian8
-    - grep '^alertmanager_config' result-debian7
-    - grep '^alertmanager_config' result-centos7
-    - grep '^alertmanager_config' result-centos6
-    - grep '^alertmanager_config' result-ubuntu14.04-git
-    - grep '^alertmanager_config' result-debian8-git
-    - grep '^alertmanager_config' result-centos7-git
+    - grep '<title>AlertManager' result-ubuntu14.04
+    - grep '<title>AlertManager' result-ubuntu12.04
+    - grep '<title>AlertManager' result-debian8
+    - grep '<title>AlertManager' result-debian7
+    - grep '<title>AlertManager' result-centos7
+    - grep '<title>AlertManager' result-centos6
+    - grep '<title>AlertManager' result-ubuntu14.04-git
+    - grep '<title>AlertManager' result-debian8-git
+    - grep '<title>AlertManager' result-centos7-git
 
 
     #-------------------------
