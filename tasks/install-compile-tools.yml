@@ -9,9 +9,7 @@
   action: "{{ ansible_pkg_mgr }} name={{ item }} state=present"
   with_items:
     - git
-    - mercurial
     - gzip
-    - wget
     - curl
 
 - name: install make
@@ -21,3 +19,27 @@
 - name: install make
   apt: name=build-essential state=present
   when: ansible_pkg_mgr == "apt"
+
+
+- name: set internal variables for convenience
+  set_fact:
+    golang_tarball_url: "http://golang.org/dl/go{{ go_version }}.linux-amd64.tar.gz"
+  when: ansible_userspace_bits == "64"
+
+- name: set internal variables for convenience
+  set_fact:
+    golang_tarball_url: "http://golang.org/dl/go{{ go_version }}.linux-386.tar.gz"
+  when: ansible_userspace_bits == "32"
+
+- name: mkdir for Golang
+  file: path={{ item }}  state=directory
+  with_items:
+    - "{{ prometheus_goroot }}"
+    - "{{ prometheus_gopath }}"
+
+- name: download and untar Golang tarball
+  unarchive:
+    src:  "{{ golang_tarball_url }}"
+    dest: "{{ prometheus_workdir }}"
+    copy: no
+    creates: "{{ prometheus_goroot }}/bin/go"

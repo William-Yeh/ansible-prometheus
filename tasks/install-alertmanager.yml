@@ -33,45 +33,25 @@
 
     - name: set internal variables for convenience
       set_fact:
-        prometheus_gopath: "{{ prometheus_download_path }}/prometheus_workdir"
         prometheus_alertmanager_git_url: "https://github.com/prometheus/alertmanager.git"
-        prometheus_alertmanager_src_path: "{{ prometheus_download_path }}/prometheus_workdir/src/github.com/prometheus/alertmanager"
+        prometheus_alertmanager_src_path: "{{ prometheus_workdir }}/src/github.com/prometheus/alertmanager"
 
+    - name: install gcc for compiling go-sqlite3
+      action: "{{ ansible_pkg_mgr }} name=gcc state=present"
+
+    - name: install static libs for compiling source
+      yum: name=glibc-static state=present
+      when: ansible_pkg_mgr == "yum"
 
     - name: delete the alertmanager build directory, if necessary
       file: path="{{ prometheus_alertmanager_src_path }}" state=absent
       when: prometheus_rebuild
 
-    - name: install git, if necessary
-      package: name=git state=present
-
-    - name: install gcc-related stuff
-      yum: name={{ item }} state=present
-      with_items:
-        - glibc-static
-        - gcc
-      when: ansible_pkg_mgr == "yum"
-
-    - name: install gcc-related stuff
-      apt: name={{ item }} state=present
-      with_items:
-        - libc6-dev
-      when: ansible_pkg_mgr == "apt"
-
     - name: clone the alertmanager project src
       git:
         repo: "{{ prometheus_alertmanager_git_url }}"
-        dest: "{{prometheus_alertmanager_src_path }}"
+        dest: "{{ prometheus_alertmanager_src_path }}"
         force: yes
-
-    - name: install temporary Go compiler
-      shell: "{{ prometheus_alertmanager_src_path }}/scripts/goenv.sh {{ prometheus_download_path }}/prometheus_workdir/go {{ prometheus_download_path }}/prometheus_workdir/gopath"
-
-    - name: determine installed Go version
-      command: "ls {{ prometheus_download_path }}/prometheus_workdir/go/"
-      when: prometheus_alertmanager_version == "git"
-      changed_when: false
-      register: go_version
 
     - name: build alertmanager source code
       command: make
@@ -79,9 +59,10 @@
         chdir: "{{ prometheus_alertmanager_src_path }}"
         creates: alertmanager
       environment:
-        PATH: "{{ ansible_env.PATH }}:{{ prometheus_download_path }}/prometheus_workdir/go/{{ go_version.stdout }}/bin"
-        GOPATH: "{{ prometheus_gopath }}"
-        GOROOT: "{{ prometheus_download_path }}/prometheus_workdir/go/{{ go_version.stdout }}"
+        GO15VENDOREXPERIMENT: 1
+        GOROOT: "{{ prometheus_goroot }}"
+        GOPATH: "{{ prometheus_gopath }}:{{ prometheus_alertmanager_src_path }}:{{ prometheus_workdir }}"
+        PATH: "{{ ansible_env.PATH }}:{{ prometheus_goroot }}/bin:{{ prometheus_gopath }}/bin"
 
     - name: copy the built alertmanager to the install path
       command: "cp {{ prometheus_alertmanager_src_path }}/alertmanager {{ prometheus_install_path }}"
@@ -89,7 +70,6 @@
         creates: "{{ prometheus_install_path }}/alertmanager"
 
   when: prometheus_alertmanager_version == "git"
-
 
 
 

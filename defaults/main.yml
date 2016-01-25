@@ -13,12 +13,13 @@
 prometheus_user:   prometheus
 prometheus_group:  prometheus
 
-prometheus_version:                 0.16.1
+prometheus_version:                 0.16.2
 prometheus_node_exporter_version:   0.11.0
 prometheus_alertmanager_version:    0.1.0-beta1
 prometheus_consul_exporter_version: 0.2.0
 
-gosu_version:  1.7
+gosu_version: 1.7
+go_version:   1.5.3
 
 
 prometheus_install_path:         /opt/prometheus
@@ -31,7 +32,11 @@ prometheus_pid_path:             /var/run/prometheus
 prometheus_alertmanager_db_path: /var/lib/alertmanager
 
 
-prometheus_download_path:     /tmp
+prometheus_download_path: /tmp
+prometheus_workdir:       "{{ prometheus_download_path }}/prometheus_workdir"
+prometheus_goroot:        "{{ prometheus_workdir }}/go"
+prometheus_gopath:        "{{ prometheus_workdir }}/gopath"
+
 
 prometheus_clean_tarball:     true
 

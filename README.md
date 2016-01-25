@@ -82,7 +82,7 @@ User-configurable defaults:
 
 ```yaml
 # which version?
-prometheus_version:  0.16.1
+prometheus_version:  0.16.2
 
 
 
@@ -163,7 +163,7 @@ User-configurable defaults:
 
 ```yaml
 # which version?
-prometheus_alertmanager_version:  0.0.4
+prometheus_alertmanager_version:  0.1.0-beta1
 
 # directory for runtime database (currently for `silences.json`)
 prometheus_alertmanager_db_path: /var/lib/alertmanager
@@ -208,7 +208,7 @@ prometheus_consul_exporter_opts
 
 For aforementioned `prometheus_components`, you can optionally download/compile from the *master* branch of [Prometheus repositories](https://github.com/prometheus) by setting the respective version to `git`.
 
-There are no external requirements needed to compile from source, as Prometheus provides them all via the install scripts. Git, Mercurial, GZip, Curl, and Wget will be installed from your package manager (yum or apt). If you already have all dependencies, nothing will be installed.
+It will install a temporary Golang compiler in the `prometheus_workdir` directory (defined in `defaults/main.yml`).
 
 For example, get the latest code for all components by assigning all `*_version` variables to `git`:
 

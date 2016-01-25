@@ -1,4 +1,4 @@
 - src: https://github.com/trumant/ansible-consul.git
   version: 2bd5776c8f66e071500d7588547e8ab9ab103b03
   name: consul
-  path: /tmp/roles
+  #path: /tmp/roles

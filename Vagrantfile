@@ -6,11 +6,12 @@ Vagrant.configure(2) do |config|
         #node.vm.box = "ubuntu/precise64"
         #node.vm.box = "debian/jessie64"
         #node.vm.box = "debian/wheezy64"
-        #node.vm.box = "bento/centos-7.1"
+        #node.vm.box = "bento/centos-7.2"
         #node.vm.box = "bento/centos-6.7"
 
         node.vm.provision "ansible" do |ansible|
             ansible.playbook = "test.yml"
+            #ansible.playbook = "test_with_consul.yml"
             #ansible.sudo = true
             ansible.verbose = "vvv"
         end
@@ -40,7 +41,9 @@ Vagrant.configure(2) do |config|
             docker build  -f test/Dockerfile-debian7      -t prometheus_wheezy   .
             docker build  -f test/Dockerfile-centos7      -t prometheus_centos7  .
             docker build  -f test/Dockerfile-centos6      -t prometheus_centos6  .
-            docker build  -f test/Dockerfile-ubuntu14.04-git -t prometheus_trusty_git .
+            docker build  -f test/Dockerfile-ubuntu14.04-git  -t prometheus_trusty_git   .
+            docker build  -f test/Dockerfile-debian8-git      -t prometheus_jessie_git   .
+            docker build  -f test/Dockerfile-centos7-git      -t prometheus_centos7_git  .
         SHELL
     end
 
