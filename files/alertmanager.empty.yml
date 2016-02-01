@@ -6,3 +6,10 @@ route:
   group_interval: 5m
   repeat_interval: 3h
   continue: true
+  receiver: 'default-pager'
+
+
+receivers:
+  - name: 'default-pager'
+    pagerduty_configs:
+    - service_key: <team-X-key>
