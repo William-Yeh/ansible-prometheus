@@ -54,7 +54,8 @@
         force: yes
 
     - name: build alertmanager source code
-      command: make
+      command: make format build
+      #command: make
       args:
         chdir: "{{ prometheus_alertmanager_src_path }}"
         creates: alertmanager
