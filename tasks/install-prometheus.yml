@@ -111,21 +111,28 @@
   service: name=prometheus enabled=yes
 
 - name: copy prometheus main config file from role's default, if necessary
-  template: src=../templates/prometheus.yml.j2  dest="{{ prometheus_config_path }}/prometheus.yml"
+  template:
+    src: "../templates/prometheus.yml.j2"
+    dest: "{{ prometheus_config_path }}/prometheus.yml"
+    validate: "{{ prometheus_install_path }}/promtool check-config %s"
   when: prometheus_conf_main is not defined
   notify:
-    - restart prometheus
+    - reload prometheus
 
 - name: copy prometheus main config file from playbook's, if any
-  template: src="{{ playbook_dir }}/{{ prometheus_conf_main }}"  dest="{{ prometheus_config_path }}/prometheus.yml"
-  validate: "{{ prometheus_install_path }}/promtool check-config %s"
+  template:
+    src: "{{ playbook_dir }}/{{ prometheus_conf_main }}"
+    dest: "{{ prometheus_config_path }}/prometheus.yml"
+    validate: "{{ prometheus_install_path }}/promtool check-config %s"
   when: prometheus_conf_main is defined
   notify:
     - reload prometheus
 
 - name: copy rule files from playbook's, if any
-  copy: src={{ playbook_dir }}/{{ item.value.src }}  dest={{ prometheus_rule_path }}/{{ item.value.dest }}
-  validate: "{{ prometheus_install_path }}/promtool check-rules %s"
+  copy:
+    src: "{{ playbook_dir }}/{{ item.value.src }}"
+    dest: "{{ prometheus_rule_path }}/{{ item.value.dest }}"
+    validate: "{{ prometheus_install_path }}/promtool check-rules %s"
   with_dict: prometheus_rule_files | default({})
   notify:
     - reload prometheus
