@@ -19,7 +19,7 @@ prometheus_alertmanager_version:    0.1.0-beta1
 prometheus_consul_exporter_version: 0.2.0
 
 gosu_version: 1.7
-go_version:   1.5.3
+prometheus_go_version:   1.5.3
 
 
 prometheus_install_path:         /opt/prometheus
