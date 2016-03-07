@@ -83,3 +83,7 @@ script:
     # - grep '^consul_catalog_services' result-debian8
     # - grep '^consul_catalog_services' result-debian7
     # - grep '^consul_catalog_services' result-debian8-git
+
+
+notifications:
+    webhooks: https://galaxy.ansible.com/api/v1/notifications/

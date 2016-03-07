@@ -8,23 +8,38 @@
 
 - block:
 
-    - name: set internal variables for convenience
+    - name: set internal variables for convenience, part 1
       set_fact:
-        prometheus_alertmanager_tarball_url: "https://github.com/prometheus/alertmanager/releases/download/{{ prometheus_alertmanager_version }}/alertmanager-{{ prometheus_alertmanager_version }}.linux-amd64.tar.gz"
-        prometheus_alertmanager_untar_path: "{{ prometheus_install_path }}"
+        prometheus_alertmanager_signature: "alertmanager-{{ prometheus_alertmanager_version }}.linux-amd64"
       when: ansible_userspace_bits == "64"
 
-    - name: set internal variables for convenience
+    - name: set internal variables for convenience, part 1
       set_fact:
-        prometheus_alertmanager_tarball_url: "https://github.com/prometheus/alertmanager/releases/download/{{ prometheus_alertmanager_version }}/alertmanager-{{ prometheus_alertmanager_version }}.linux-386.tar.gz"
-        prometheus_alertmanager_untar_path: "{{ prometheus_install_path }}"
+        prometheus_alertmanager_signature: "alertmanager-{{ prometheus_alertmanager_version }}.linux-386"
       when: ansible_userspace_bits == "32"
+
+    - name: set internal variables for convenience, part 2
+      set_fact:
+        prometheus_alertmanager_tarball_url: "https://github.com/prometheus/alertmanager/releases/download/{{ prometheus_alertmanager_version }}/{{ prometheus_alertmanager_signature }}.tar.gz"
+        prometheus_alertmanager_untar_path: "{{ prometheus_install_path }}"
+
 
     - name: download and uncompress alertmanager tarball
       unarchive:
         src: "{{ prometheus_alertmanager_tarball_url }}"
         dest: "{{ prometheus_alertmanager_untar_path }}"
         copy: no
+        owner: "{{ prometheus_user }}"
+        group: "{{ prometheus_group }}"
+        mode: "go-w"
+
+    - name: create symlink for alertmanager executable
+      file:
+        src: "{{ prometheus_alertmanager_untar_path }}/{{ prometheus_alertmanager_signature }}"
+        dest: "{{ prometheus_alertmanager_untar_path }}/alertmanager"
+        state: link
+        owner: "{{ prometheus_user }}"
+        group: "{{ prometheus_group }}"
 
   when: prometheus_alertmanager_version != "git"
 
@@ -70,16 +85,15 @@
       args:
         creates: "{{ prometheus_install_path }}/alertmanager"
 
+    - name: set permissions, owner and group
+      file:
+        path: "{{ prometheus_install_path }}/alertmanager"
+        owner: "{{ prometheus_user }}"
+        group: "{{ prometheus_group }}"
+        mode: "go-w"
+
   when: prometheus_alertmanager_version == "git"
 
-
-
-- name: set permissions, owner and group
-  file:
-    path: "{{ prometheus_install_path }}/alertmanager"
-    owner: "{{ prometheus_user }}"
-    group: "{{ prometheus_group }}"
-    mode: "go-w"
 
 - name: mkdir for alertmanager data (silences.json for now)
   file:
