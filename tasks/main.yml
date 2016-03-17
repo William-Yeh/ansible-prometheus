@@ -20,12 +20,12 @@
 
 
 - name: create Prometheus group
-  group: name=prometheus state=present
+  group: name={{ prometheus_group }}  state=present
 
 - name: create Prometheus user
   user:
-    name: prometheus
-    group: prometheus
+    name: "{{ prometheus_user }}"
+    group: "{{ prometheus_group }}"
     createhome: no
     shell: /sbin/nologin
     comment: "Prometheus User"
