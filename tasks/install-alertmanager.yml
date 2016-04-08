@@ -22,6 +22,7 @@
       set_fact:
         prometheus_alertmanager_tarball_url: "https://github.com/prometheus/alertmanager/releases/download/{{ prometheus_alertmanager_version }}/{{ prometheus_alertmanager_signature }}.tar.gz"
         prometheus_alertmanager_untar_path: "{{ prometheus_install_path }}"
+        prometheus_alertmanager_daemon_dir: "{{ prometheus_install_path }}/{{ prometheus_alertmanager_signature }}"
 
 
     - name: download and uncompress alertmanager tarball
@@ -33,14 +34,6 @@
         group: "{{ prometheus_group }}"
         mode: "go-w"
 
-    - name: create symlink for alertmanager executable
-      file:
-        src: "{{ prometheus_alertmanager_untar_path }}/{{ prometheus_alertmanager_signature }}"
-        dest: "{{ prometheus_alertmanager_untar_path }}/alertmanager"
-        state: link
-        owner: "{{ prometheus_user }}"
-        group: "{{ prometheus_group }}"
-
   when: prometheus_alertmanager_version != "git"
 
 
@@ -50,6 +43,7 @@
       set_fact:
         prometheus_alertmanager_git_url: "https://github.com/prometheus/alertmanager.git"
         prometheus_alertmanager_src_path: "{{ prometheus_workdir }}/src/github.com/prometheus/alertmanager"
+        prometheus_alertmanager_daemon_dir: "{{ prometheus_install_path }}"
 
     - name: install gcc for compiling go-sqlite3
       action: "{{ ansible_pkg_mgr }} name=gcc state=present"

@@ -22,7 +22,7 @@
 
 NAME=alertmanager
 DESC="Prometheus Alertmanager"
-DAEMON={{ prometheus_install_path }}/alertmanager
+DAEMON={{ prometheus_alertmanager_daemon_dir }}/alertmanager
 USER={{ prometheus_user }}
 CONFIG={{ prometheus_config_path }}/alertmanager.yml
 PID="{{ prometheus_pid_path }}/$NAME.pid"

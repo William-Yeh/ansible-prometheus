@@ -163,7 +163,7 @@ User-configurable defaults:
 
 ```yaml
 # which version?
-prometheus_alertmanager_version:  0.1.0
+prometheus_alertmanager_version:  0.1.1
 
 # directory for runtime database (currently for `silences.json`)
 prometheus_alertmanager_db_path: /var/lib/alertmanager
