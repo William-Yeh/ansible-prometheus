@@ -82,7 +82,7 @@ User-configurable defaults:
 
 ```yaml
 # which version?
-prometheus_version:  0.17.0
+prometheus_version:  0.18.0
 
 
 

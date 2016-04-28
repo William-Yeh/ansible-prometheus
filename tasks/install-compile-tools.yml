@@ -13,22 +13,24 @@
     - curl
 
 - name: install make
-  yum: name=make state=present
+  yum: name=make state=present update_cache=yes
   when: ansible_pkg_mgr == "yum"
 
 - name: install make
-  apt: name=build-essential state=present
+  apt: name=build-essential state=present update_cache=yes
   when: ansible_pkg_mgr == "apt"
 
 
 - name: set internal variables for convenience
   set_fact:
-    prometheus_golang_tarball_url: "http://golang.org/dl/go{{ prometheus_go_version }}.linux-amd64.tar.gz"
+    prometheus_golang_tarball_url: "https://storage.googleapis.com/golang/go{{ prometheus_go_version }}.linux-amd64.tar.gz"
+    #prometheus_golang_tarball_url: "http://golang.org/dl/go{{ prometheus_go_version }}.linux-amd64.tar.gz"
   when: ansible_userspace_bits == "64"
 
 - name: set internal variables for convenience
   set_fact:
-    prometheus_golang_tarball_url: "http://golang.org/dl/go{{ prometheus_go_version }}.linux-386.tar.gz"
+    prometheus_golang_tarball_url: "https://storage.googleapis.com/golang/go{{ prometheus_go_version }}.linux-386.tar.gz"
+    #prometheus_golang_tarball_url: "http://golang.org/dl/go{{ prometheus_go_version }}.linux-386.tar.gz"
   when: ansible_userspace_bits == "32"
 
 - name: mkdir for Golang

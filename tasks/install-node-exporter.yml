@@ -32,7 +32,7 @@
     - name: set internal variables for convenience
       set_fact:
         prometheus_node_exporter_git_url: "https://github.com/prometheus/node_exporter.git"
-        prometheus_node_exporter_src_path: "{{ prometheus_gopath }}/src/github.com/prometheus/node_exporter"
+        prometheus_node_exporter_src_path: "{{ prometheus_goroot }}/src/github.com/prometheus/node_exporter"
 
     - name: delete the node_exporter build directory, if necessary
       file: path={{ prometheus_node_exporter_src_path }}  state=absent

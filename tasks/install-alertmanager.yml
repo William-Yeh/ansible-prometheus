@@ -42,7 +42,7 @@
     - name: set internal variables for convenience
       set_fact:
         prometheus_alertmanager_git_url: "https://github.com/prometheus/alertmanager.git"
-        prometheus_alertmanager_src_path: "{{ prometheus_workdir }}/src/github.com/prometheus/alertmanager"
+        prometheus_alertmanager_src_path: "{{ prometheus_goroot }}/src/github.com/prometheus/alertmanager"
         prometheus_alertmanager_daemon_dir: "{{ prometheus_install_path }}"
 
     - name: install gcc for compiling go-sqlite3
@@ -71,7 +71,7 @@
       environment:
         GO15VENDOREXPERIMENT: 1
         GOROOT: "{{ prometheus_goroot }}"
-        GOPATH: "{{ prometheus_gopath }}:{{ prometheus_alertmanager_src_path }}:{{ prometheus_workdir }}"
+        GOPATH: "{{ prometheus_gopath }}"
         PATH: "{{ ansible_env.PATH }}:{{ prometheus_goroot }}/bin:{{ prometheus_gopath }}/bin"
 
     - name: copy the built alertmanager to the install path

@@ -68,8 +68,8 @@ script:
     # for consul_exporter
     #
 
-    - grep '^consul_catalog_services' result-ubuntu14.04
-    - grep '^consul_catalog_services' result-ubuntu14.04-git
+    - grep '^consul_up' result-ubuntu14.04
+    - grep '^consul_up' result-ubuntu14.04-git
 
     # Consul role does not yet support Ubuntu 12.04
     # - grep '^consul_catalog_services' result-ubuntu12.04

@@ -44,7 +44,7 @@
     - name: set internal variables for convenience
       set_fact:
         prometheus_git_url: "https://github.com/prometheus/prometheus.git"
-        prometheus_src_path: "{{ prometheus_workdir }}/src/github.com/prometheus/prometheus"
+        prometheus_src_path: "{{ prometheus_goroot }}/src/github.com/prometheus/prometheus"
         prometheus_daemon_dir: "{{ prometheus_install_path }}"
 
     - name: delete the prometheus build directory, if necessary
@@ -65,7 +65,7 @@
       environment:
         GO15VENDOREXPERIMENT: 1
         GOROOT: "{{ prometheus_goroot }}"
-        GOPATH: "{{ prometheus_gopath }}:{{ prometheus_src_path }}:{{ prometheus_workdir }}"
+        GOPATH: "{{ prometheus_gopath }}"
         PATH: "{{ ansible_env.PATH }}:{{ prometheus_goroot }}/bin:{{ prometheus_gopath }}/bin"
 
     - name: copy the built prometheus to the install path
