@@ -15,7 +15,7 @@
 
 - name: install dependencies for compiling Prometheus source code
   include: install-compile-tools.yml
-  when: prometheus_alertmanager_version == "git" or prometheus_node_exporter_version == "git" or prometheus_version == "git" or prometheus_consul_exporter_version == "git"
+  when: prometheus_alertmanager_version == "git" or prometheus_node_exporter_version == "git" or prometheus_version == "git"
 
 
 
@@ -55,10 +55,6 @@
 - name: install node-exporter
   include: install-node-exporter.yml
   when: '"node_exporter" in prometheus_components'
-
-- name: install consul-exporter
-  include: install-consul-exporter.yml
-  when: '"consul_exporter" in prometheus_components'
 
 - name: install alertmanager
   include: install-alertmanager.yml

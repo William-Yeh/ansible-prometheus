@@ -12,11 +12,16 @@ Role name in Ansible Galaxy: **[williamyeh.prometheus](https://galaxy.ansible.co
 
 This Ansible role has the following features for [Prometheus](http://prometheus.io/):
 
- - Install specific versions of [Prometheus server](https://github.com/prometheus/prometheus), [Node exporter](https://github.com/prometheus/node_exporter), [Alertmanager](https://github.com/prometheus/alertmanager), and [Consul exporter](https://github.com/prometheus/consul_exporter);
+ - Install specific versions of [Prometheus server](https://github.com/prometheus/prometheus), [Node exporter](https://github.com/prometheus/node_exporter), [Alertmanager](https://github.com/prometheus/alertmanager).
  - Handlers for restart/reload/stop events;
  - Bare bone configuration (*real* configuration should be left to user's template files; see **Usage** section below).
 
 
+
+For other exporters, use the following roles:
+
+- **[williamyeh.consul_exporter](https://galaxy.ansible.com/williamyeh/consul_exporter/)**
+- **[williamyeh.mongodb_exporter](https://galaxy.ansible.com/williamyeh/mongodb_exporter/)**
 
 
 ## Role Variables
@@ -35,7 +40,6 @@ The components to be installed:
 #
 #   [Exporter components]
 #     - "node_exporter"
-#     - "consul_exporter"
 #
 prometheus_components
 ```
@@ -184,24 +188,6 @@ prometheus_alertmanager_opts
 ```
 
 
-### Optional variables: Consul exporter
-
-(Credit: [Travis Truman](https://github.com/trumant))
-
-User-configurable defaults:
-
-```yaml
-# which version?
-prometheus_consul_exporter_version:  0.2.0
-```
-
-Additional command-line arguments, if any (use `consul_exporter --help` to see the full list of arguments):
-
-```yaml
-prometheus_consul_exporter_opts
-```
-
-
 ### Optional: building from source tree
 
 (Credit: [Robbie Trencheny](https://github.com/robbiet480))
@@ -216,7 +202,6 @@ For example, get the latest code for all components by assigning all `*_version`
 prometheus_version: git
 prometheus_node_exporter_version: git
 prometheus_alertmanager_version: git
-prometheus_consul_exporter_version: git
 ```
 
 If you'd like to force rebuild each time, enable the following variable (default is `false`):
@@ -333,8 +318,8 @@ None.
 ## Contributors
 
 - [William Yeh](https://github.com/William-Yeh)
-- [Robbie Trencheny](https://github.com/robbiet480)
-- [Travis Truman](https://github.com/trumant)
+- [Robbie Trencheny](https://github.com/robbiet480) - contribute an early version of building binaries from Go source code.
+- [Travis Truman](https://github.com/trumant) - contribute an early version of consul_exporter installer; now moved to [williamyeh.consul_exporter](https://github.com/William-Yeh/ansible-consul-exporter).
 - [Musee Ullah](https://github.com/lae)
 
 ## License
