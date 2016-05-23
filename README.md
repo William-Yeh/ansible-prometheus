@@ -17,8 +17,7 @@ This Ansible role has the following features for [Prometheus](http://prometheus.
  - Bare bone configuration (*real* configuration should be left to user's template files; see **Usage** section below).
 
 
-
-For other exporters, use the following roles:
+To keep this role simple, use the following roles if you want to install other Prometheus exporters:
 
 - **[williamyeh.consul_exporter](https://galaxy.ansible.com/williamyeh/consul_exporter/)**
 - **[williamyeh.mongodb_exporter](https://galaxy.ansible.com/williamyeh/mongodb_exporter/)**
@@ -76,7 +75,7 @@ prometheus_download_path:  /tmp
 
 
 # version of helper utility "gosu"
-gosu_version:  1.7
+gosu_version:  1.9
 ```
 
 
@@ -150,7 +149,7 @@ User-configurable defaults:
 
 ```yaml
 # which version?
-prometheus_node_exporter_version:  0.11.0
+prometheus_node_exporter_version:  0.12.0
 ```
 
 Additional command-line arguments, if any (use `node_exporter --help` to see the full list of arguments):
