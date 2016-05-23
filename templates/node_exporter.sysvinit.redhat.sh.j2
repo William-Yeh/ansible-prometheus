@@ -20,7 +20,7 @@
 
 NAME=node_exporter
 DESC="Exporter for machine metrics"
-DAEMON={{ prometheus_install_path }}/node_exporter
+DAEMON={{ prometheus_node_exporter_daemon_dir }}/node_exporter
 USER={{ prometheus_user }}
 CONFIG=
 PID="{{ prometheus_pid_path }}/$NAME.pid"

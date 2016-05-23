@@ -11,12 +11,24 @@
     - name: set internal variables for convenience
       set_fact:
         prometheus_node_exporter_tarball_url: "https://github.com/prometheus/node_exporter/releases/download/{{ prometheus_node_exporter_version }}/node_exporter-{{ prometheus_node_exporter_version }}.linux-amd64.tar.gz"
+        prometheus_node_exporter_subdir: "{{ prometheus_install_path }}/node_exporter-{{ prometheus_node_exporter_version }}.linux-amd64"
       when: ansible_userspace_bits == "64"
 
     - name: set internal variables for convenience
       set_fact:
         prometheus_node_exporter_tarball_url: "https://github.com/prometheus/node_exporter/releases/download/{{ prometheus_node_exporter_version }}/node_exporter-{{ prometheus_node_exporter_version }}.linux-386.tar.gz"
+        prometheus_node_exporter_subdir: "{{ prometheus_install_path }}/node_exporter-{{ prometheus_node_exporter_version }}.linux-386"
       when: ansible_userspace_bits == "32"
+
+    - name: set daemon dir for >= 0.12
+      set_fact:
+        prometheus_node_exporter_daemon_dir: "{{ prometheus_node_exporter_subdir }}"
+      when: prometheus_version | version_compare('0.12', '>=')
+
+    - name: set daemon dir for < 0.12
+      set_fact:
+        prometheus_node_exporter_daemon_dir: "{{ prometheus_install_path }}"
+      when: prometheus_version | version_compare('0.12', '<')
 
     - name: download and untar node_exporter tarball
       unarchive:
@@ -33,6 +45,7 @@
       set_fact:
         prometheus_node_exporter_git_url: "https://github.com/prometheus/node_exporter.git"
         prometheus_node_exporter_src_path: "{{ prometheus_goroot }}/src/github.com/prometheus/node_exporter"
+        prometheus_node_exporter_daemon_dir: "{{ prometheus_install_path }}"
 
     - name: delete the node_exporter build directory, if necessary
       file: path={{ prometheus_node_exporter_src_path }}  state=absent
@@ -68,7 +81,7 @@
 
 
 - name: set permissions, owner and group
-  file: path={{ prometheus_install_path }}/node_exporter owner={{ prometheus_user }} group={{ prometheus_group }} mode="go-w"
+  file: path={{ prometheus_node_exporter_daemon_dir }}/node_exporter owner={{ prometheus_user }} group={{ prometheus_group }} mode="go-w"
 
 - name: mkdir for data
   file:
