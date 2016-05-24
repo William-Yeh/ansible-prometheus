@@ -18,15 +18,12 @@
 
 - name: restart node_exporter
   service: name=node_exporter state=restarted
-  when: prometheus_use_service|bool
 
 - name: reload node_exporter
   service: name=node_exporter state=reloaded
-  when: prometheus_use_service|bool
 
 - name: stop node_exporter
   service: name=node_exporter state=stopped
-  when: prometheus_use_service|bool
 
 
 

@@ -15,7 +15,7 @@ MAINTAINER William Yeh <william.pjyeh@gmail.com>
 #
 
 ENV PLAYBOOK test.yml
-RUN ansible-playbook-wrapper
+RUN ansible-playbook-wrapper --extra-vars "prometheus_node_exporter_use_systemd=false"
 
 
 

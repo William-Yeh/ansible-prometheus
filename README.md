@@ -17,7 +17,7 @@ This Ansible role has the following features for [Prometheus](http://prometheus.
  - Bare bone configuration (*real* configuration should be left to user's template files; see **Usage** section below).
 
 
-To keep this role simple, use the following roles if you want to install other Prometheus exporters:
+To keep this role simple, this role only installs 3 components: Prometheus server, Node exporter, and Alertmanager. Use the following roles if you want to install other Prometheus exporters:
 
 - **[William-Yeh.consul_exporter](https://galaxy.ansible.com/William-Yeh/consul_exporter/)**
 - **[williamyeh.mongodb_exporter](https://galaxy.ansible.com/williamyeh/mongodb_exporter/)**
@@ -77,6 +77,18 @@ prometheus_download_path:  /tmp
 # version of helper utility "gosu"
 gosu_version:  1.9
 ```
+
+
+### Optional variables: systemd or not
+
+
+If the Linux distributions are equipped with systemd, this role will use this mechanism accordingly. You can disable this (i.e., use traditional SysV-style init script) by defining the following variable(s) to `false`:
+
+```yaml
+# currently, only node_exporter is supported.
+prometheus_node_exporter_use_systemd
+```
+
 
 
 ### Optional variables: Prometheus server

@@ -18,7 +18,7 @@ RUN echo "===> Installing the missing "tar" utility for Docker image..."  && \
     yum -y install tar
 
 ENV PLAYBOOK test.yml
-RUN ansible-playbook-wrapper -vvv
+RUN ansible-playbook-wrapper
 
 
 

@@ -96,10 +96,12 @@
 
 - name: copy INIT script to server
   template: src="../templates/node_exporter.sysvinit.{{ ansible_os_family|lower }}.sh.j2"  dest="/etc/init.d/node_exporter"  mode="a+x"
+  when: not prometheus_node_exporter_use_systemd|bool
 
-- name: set INIT status
-  service: name=node_exporter enabled=yes
+- name: copy systemd config to server
+  template: src="../templates/node_exporter.service.j2"  dest="/lib/systemd/system/node_exporter.service"
+  when: prometheus_node_exporter_use_systemd
+
 
 - name: set INIT status and start
-  service: name=node_exporter state=started
-  when: prometheus_use_service|bool
+  service: name=node_exporter enabled=yes state=started

@@ -1,0 +1,21 @@
+[Unit]
+Description=node_exporter - Exporter for machine metrics.
+Documentation=https://github.com/William-Yeh/ansible-prometheus
+After=network.target
+
+[Service]
+Type=simple
+
+#ExecStartPre=/bin/sh -c  " mkdir -p '{{ prometheus_pid_path }}' '{{ prometheus_log_path }}' "
+#ExecStartPre=/bin/sh -c  " chown -R {{ prometheus_user }} '{{ prometheus_pid_path }}' '{{ prometheus_log_path }}' "
+#PIDFile={{ prometheus_pid_path }}/node_exporter.pid
+
+
+User={{ prometheus_user }}
+Group={{ prometheus_group }}
+
+{% if prometheus_node_exporter_opts is defined %}
+ExecStart={{ prometheus_node_exporter_daemon_dir }}/node_exporter  {{ prometheus_node_exporter_opts }}
+{% else %}
+ExecStart={{ prometheus_node_exporter_daemon_dir }}/node_exporter
+{% endif %}
