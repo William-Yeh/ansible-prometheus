@@ -19,7 +19,7 @@ This Ansible role has the following features for [Prometheus](http://prometheus.
 
 To keep this role simple, use the following roles if you want to install other Prometheus exporters:
 
-- **[williamyeh.consul_exporter](https://galaxy.ansible.com/williamyeh/consul_exporter/)**
+- **[William-Yeh.consul_exporter](https://galaxy.ansible.com/William-Yeh/consul_exporter/)**
 - **[williamyeh.mongodb_exporter](https://galaxy.ansible.com/williamyeh/mongodb_exporter/)**
 
 
