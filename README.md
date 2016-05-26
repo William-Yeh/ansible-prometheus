@@ -330,7 +330,7 @@ None.
 
 - [William Yeh](https://github.com/William-Yeh)
 - [Robbie Trencheny](https://github.com/robbiet480) - contribute an early version of building binaries from Go source code.
-- [Travis Truman](https://github.com/trumant) - contribute an early version of consul_exporter installer; now moved to [williamyeh.consul_exporter](https://github.com/William-Yeh/ansible-consul-exporter).
+- [Travis Truman](https://github.com/trumant) - contribute an early version of consul_exporter installer; now moved to [William-Yeh.consul_exporter](https://github.com/William-Yeh/ansible-consul-exporter).
 - [Musee Ullah](https://github.com/lae)
 
 ## License
