@@ -26,15 +26,15 @@ scrape_configs:
   - job_name: 'prometheus'
     scrape_interval: 10s
     scrape_timeout:  10s
-    target_groups:
+    static_configs:
       - targets: ['localhost:9090']
 
   - job_name: "node"
     file_sd_configs:
-      - names:
+      - files:
         - '{{ prometheus_file_sd_config_path }}/*.json'
         - '{{ prometheus_file_sd_config_path }}/*.yml'
         - '{{ prometheus_file_sd_config_path }}/*.yaml'
-    #target_groups:
+    #static_configs:
     #- targets:
     #  - "localhost:9100"

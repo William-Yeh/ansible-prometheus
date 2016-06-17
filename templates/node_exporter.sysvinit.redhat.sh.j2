@@ -88,8 +88,11 @@ stop() {
 }
 
 reload() {
-  killproc -p $PID -b $DAEMON  $NAME -HUP
-  RETVAL=$?
+  #-- sorry but node_exporter doesn't handle -HUP signal...
+  #killproc -p $PID -b $DAEMON  $NAME -HUP
+  #RETVAL=$?
+  stop
+  start
 }
 
 case "$1" in

@@ -108,12 +108,15 @@ case "$1" in
 
   reload)
     log_daemon_msg "Reloading $DESC configuration -" "$NAME"
-    if start-stop-daemon --stop --signal HUP --quiet --oknodo --pidfile $PID --startas /bin/bash -- -c "exec $DAEMON $DAEMON_OPTS > $LOG 2>&1"
-    then
-      log_end_msg 0
-    else
-      log_end_msg 1
-	  fi
+    #-- sorry but node_exporter doesn't handle -HUP signal...
+    #if start-stop-daemon --stop --signal HUP --quiet --oknodo --pidfile $PID --startas /bin/bash -- -c "exec $DAEMON $DAEMON_OPTS > $LOG 2>&1"
+    #then
+    #  log_end_msg 0
+    #else
+    #  log_end_msg 1
+	  #fi
+    stop
+    start
     ;;
 
   restart|force-reload)

@@ -97,7 +97,7 @@ User-configurable defaults:
 
 ```yaml
 # which version?
-prometheus_version:  0.19.1
+prometheus_version:  0.20.0
 
 
 
@@ -238,7 +238,7 @@ Node exporter:
 
 - `restart node_exporter`
 
-- `reload node_exporter`
+- `reload node_exporter` (actually, the same as `restart`)
 
 - `stop node_exporter`
 
