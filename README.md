@@ -19,8 +19,10 @@ This Ansible role has the following features for [Prometheus](http://prometheus.
 
 To keep this role simple, this role only installs 3 components: Prometheus server, Node exporter, and Alertmanager. Use the following roles if you want to install other Prometheus exporters:
 
-- **[William-Yeh.consul_exporter](https://galaxy.ansible.com/William-Yeh/consul_exporter/)**
-- **[williamyeh.mongodb_exporter](https://galaxy.ansible.com/williamyeh/mongodb_exporter/)**
+- Consul: **[William-Yeh.consul_exporter](https://galaxy.ansible.com/William-Yeh/consul_exporter/)**
+- Elasticsearch: **[William-Yeh.es_cluster_exporter](https://galaxy.ansible.com/William-Yeh/es_cluster_exporter/)**
+- MongoDB: **[williamyeh.mongodb_exporter](https://galaxy.ansible.com/williamyeh/mongodb_exporter/)**
+
 
 
 ## Role Variables
