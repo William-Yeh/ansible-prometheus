@@ -23,12 +23,12 @@
     - name: set daemon dir for >= 0.12
       set_fact:
         prometheus_node_exporter_daemon_dir: "{{ prometheus_node_exporter_subdir }}"
-      when: prometheus_version | version_compare('0.12', '>=')
+      when: prometheus_node_exporter_version | version_compare('0.12', '>=')
 
     - name: set daemon dir for < 0.12
       set_fact:
         prometheus_node_exporter_daemon_dir: "{{ prometheus_install_path }}"
-      when: prometheus_version | version_compare('0.12', '<')
+      when: prometheus_node_exporter_version | version_compare('0.12', '<')
 
     - name: download and untar node_exporter tarball
       unarchive:
