@@ -17,7 +17,7 @@ Group={{ prometheus_group }}
 ExecStart={{ prometheus_node_exporter_daemon_dir }}/node_exporter  {{ prometheus_node_exporter_opts }}
 {% else %}
 ExecStart={{ prometheus_node_exporter_daemon_dir }}/node_exporter
-{% endif %}\
+{% endif %}
 
 [Install]
 WantedBy=multi-user.target
