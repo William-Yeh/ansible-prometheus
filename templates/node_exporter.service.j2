@@ -10,7 +10,6 @@ Type=simple
 #ExecStartPre=/bin/sh -c  " chown -R {{ prometheus_user }} '{{ prometheus_pid_path }}' '{{ prometheus_log_path }}' "
 #PIDFile={{ prometheus_pid_path }}/node_exporter.pid
 
-
 User={{ prometheus_user }}
 Group={{ prometheus_group }}
 
@@ -18,4 +17,7 @@ Group={{ prometheus_group }}
 ExecStart={{ prometheus_node_exporter_daemon_dir }}/node_exporter  {{ prometheus_node_exporter_opts }}
 {% else %}
 ExecStart={{ prometheus_node_exporter_daemon_dir }}/node_exporter
-{% endif %}
+{% endif %}\
+
+[Install]
+WantedBy=multi-user.target
