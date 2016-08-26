@@ -22,6 +22,11 @@
       prometheus_node_exporter_use_systemd: true
     when: ansible_distribution == "Red Hat Enterprise Linux" and ansible_distribution_version|int >= 7
 
+  - name: use systemd for Fedora >= 15
+    set_fact:
+      prometheus_node_exporter_use_systemd: true
+    when: ansible_distribution == "Fedora" and ansible_distribution_version|int >= 15
+
   - name: use systemd for Debian >= 8
     set_fact:
       prometheus_node_exporter_use_systemd: true
