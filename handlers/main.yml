@@ -38,3 +38,25 @@
 - name: stop alertmanager
   service: name=alertmanager state=stopped
   when: prometheus_use_service|bool
+
+
+
+- name: restart mysqld_exporter
+  service: name=mysqld_exporter state=restarted
+
+- name: reload mysqld_exporter
+  service: name=mysqld_exporter state=reloaded
+
+- name: stop node_exporter
+  service: name=mysqld_exporter state=stopped
+
+
+
+- name: restart haproxy_exporter
+  service: name=haproxy_exporter state=restarted
+
+- name: reload haproxy_exporter
+  service: name=haproxy_exporter state=reloaded
+
+- name: stop node_exporter
+  service: name=haproxy_exporter state=stopped

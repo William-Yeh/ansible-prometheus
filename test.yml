@@ -12,6 +12,8 @@
     #prometheus_components: [ "prometheus" ]
     #prometheus_components: [ "node_exporter" ]
     #prometheus_components: [ "alertmanager" ]
+    #prometheus_components: [ "haproxy_exporter" ]
+    #prometheus_components: [ "mysqld_exporter" ]
     prometheus_components: [ "prometheus", "node_exporter", "alertmanager" ]
     #prometheus_alertmanager_version: git
 
