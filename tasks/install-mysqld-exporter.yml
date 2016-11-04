@@ -1,0 +1,104 @@
+---
+# file: tasks/install-mysql-exporter.yml
+#
+# Install Prometheus mysql-exporter.
+#
+# @see http://prometheus.io/docs/introduction/getting_started/
+#
+
+- block:
+
+    - name: set internal variables for convenience
+      set_fact:
+        prometheus_mysqld_exporter_tarball_url: "https://github.com/prometheus/mysqld_exporter/releases/download/{{ prometheus_mysqld_exporter_version }}/mysqld_exporter-{{ prometheus_mysqld_exporter_version }}.linux-amd64.tar.gz"
+        prometheus_mysqld_exporter_subdir: "{{ prometheus_install_path }}/mysqld_exporter-{{ prometheus_mysqld_exporter_version }}.linux-amd64"
+      when: ansible_userspace_bits == "64"
+
+    - name: set internal variables for convenience
+      set_fact:
+        prometheus_mysqld_exporter_tarball_url: "https://github.com/prometheus/mysqld_exporter/releases/download/{{ prometheus_mysqld_exporter_version }}/mysqld_exporter-{{ prometheus_mysqld_exporter_version }}.linux-386.tar.gz"
+        prometheus_mysqld_exporter_subdir: "{{ prometheus_install_path }}/mysqld_exporter-{{ prometheus_mysqld_exporter_version }}.linux-386"
+      when: ansible_userspace_bits == "32"
+
+    - name: set daemon dir for >= 0.8.0
+      set_fact:
+        prometheus_mysqld_exporter_daemon_dir: "{{ prometheus_mysqld_exporter_subdir }}"
+      when: prometheus_mysqld_exporter_version | version_compare('0.8.0', '>=')
+
+    - name: download and untar mysqld_exporter tarball
+      unarchive:
+        src: "{{ prometheus_mysqld_exporter_tarball_url }}"
+        dest: "{{ prometheus_install_path }}"
+        copy: no
+
+  when: prometheus_mysqld_exporter_version != "git"
+
+
+- block:
+
+    - name: set internal variables for convenience
+      set_fact:
+        prometheus_mysqld_exporter_git_url: "https://github.com/prometheus/mysqld_exporter.git"
+        prometheus_mysqld_exporter_src_path: "{{ prometheus_goroot }}/src/github.com/prometheus/mysqld_exporter"
+        prometheus_mysqld_exporter_daemon_dir: "{{ prometheus_install_path }}"
+
+    - name: delete the mysqld_exporter build directory, if necessary
+      file: path={{ prometheus_mysqld_exporter_src_path }}  state=absent
+      when: prometheus_rebuild
+
+    - name: mkdir for mysqld_exporter source code
+      file: path={{ prometheus_mysqld_exporter_src_path }}  state=directory
+
+    - name: clone the mysqld_exporter project src
+      git:
+        repo: "{{ prometheus_mysqld_exporter_git_url }}"
+        dest: "{{ prometheus_mysqld_exporter_src_path }}"
+        force: yes
+
+    - name: build mysqld_exporter source code
+      command: make
+      args:
+        chdir: "{{ prometheus_mysqld_exporter_src_path }}"
+        creates: mysqld_exporter
+      environment:
+        GO15VENDOREXPERIMENT: 1
+        GOROOT: "{{ prometheus_goroot }}"
+        GOPATH: "{{ prometheus_gopath }}"
+        PATH: "{{ ansible_env.PATH }}:{{ prometheus_goroot }}/bin:{{ prometheus_gopath }}/bin"
+
+    - name: copy the built mysqld_exporter to the install path
+      command: "cp {{ prometheus_mysqld_exporter_src_path }}/mysqld_exporter {{ prometheus_install_path }}"
+      args:
+        creates: "{{ prometheus_install_path }}/mysqld_exporter"
+
+  when: prometheus_mysqld_exporter_version == "git"
+
+
+
+- name: set permissions, owner and group
+  file: path={{ prometheus_mysqld_exporter_daemon_dir }}/mysqld_exporter owner={{ prometheus_user }} group={{ prometheus_group }} mode="go-w"
+
+- name: mkdir for data
+  file:
+    path: "{{ prometheus_db_path }}"
+    state: directory
+    owner: "{{ prometheus_user }}"
+    group: "{{ prometheus_group }}"
+    mode: "u=rwx,g=rx,o="
+
+- name: set mysqld_exporter variables
+  copy: src="../files/etc-default-mysqld_exporter"  dest=/etc/default/mysqld_exporter
+
+- name: copy INIT script to server
+  template: src="../templates/mysqld_exporter.sysvinit.{{ ansible_os_family|lower }}.sh.j2"  dest="/etc/init.d/mysqld_exporter"  mode="a+x"
+  when: not prometheus_mysqld_exporter_use_systemd|bool
+
+- name: copy systemd config to server
+  template: src="../templates/mysqld_exporter.service.j2"  dest="/lib/systemd/system/mysqld_exporter.service"
+  when: prometheus_mysqld_exporter_use_systemd
+
+- name: copy my.cnf config to server
+  template: src="../templates/my.cnf.j2"  dest="/etc/prometheus/my.cnf"
+
+- name: set INIT status and start
+  service: name=mysqld_exporter enabled=yes state=started

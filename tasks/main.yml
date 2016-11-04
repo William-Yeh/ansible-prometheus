@@ -15,7 +15,7 @@
 
 - name: install dependencies for compiling Prometheus source code
   include: install-compile-tools.yml
-  when: prometheus_alertmanager_version == "git" or prometheus_node_exporter_version == "git" or prometheus_version == "git"
+  when: prometheus_alertmanager_version == "git" or prometheus_node_exporter_version == "git" or prometheus_version == "git"  or prometheus_mysqld_exporter_version == "git" or prometheus_haproxy_exporter_version == "git"
 
 
 
@@ -59,3 +59,11 @@
 - name: install alertmanager
   include: install-alertmanager.yml
   when: '"alertmanager" in prometheus_components'
+
+- name: install mysqld-exporter
+  include: install-mysqld-exporter.yml
+  when: '"mysqld_exporter" in prometheus_components'
+
+- name: install haproxy-exporter
+  include: install-haproxy-exporter.yml
+  when: '"haproxy_exporter" in prometheus_components'
