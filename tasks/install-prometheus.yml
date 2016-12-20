@@ -116,7 +116,7 @@
     - "{{ prometheus_db_path }}"
 
 - name: set prometheus variables
-  copy: src="../files/etc-default-prometheus"  dest=/etc/default/prometheus
+  template: src="etc-default-prometheus"  dest=/etc/default/prometheus
 
 - name: copy INIT script to server
   template: src="../templates/prometheus.sysvinit.{{ ansible_os_family|lower }}.sh.j2"  dest="/etc/init.d/prometheus"  mode="a+x"

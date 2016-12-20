@@ -1,0 +1,2 @@
+START=yes
+DAEMON_ARGS="$DAEMON_ARGS -storage.local.retention={{ prometheus_retention }}"
