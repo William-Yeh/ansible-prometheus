@@ -8,17 +8,19 @@
 
 - block:
 
-    - name: set internal variables for convenience
+    - name: set internal variable platform-suffix for convenience
       set_fact:
-        prometheus_node_exporter_tarball_url: "https://github.com/prometheus/node_exporter/releases/download/{{ prometheus_node_exporter_version }}/node_exporter-{{ prometheus_node_exporter_version }}.linux-amd64.tar.gz"
-        prometheus_node_exporter_subdir: "{{ prometheus_install_path }}/node_exporter-{{ prometheus_node_exporter_version }}.linux-amd64"
+        prometheus_platform_suffix: "linux-amd64"
       when: ansible_userspace_bits == "64"
+
+    - name: set internal variable platform-suffix for convenience
+      set_fact:
+        prometheus_platform_suffix: "linux-386"
+      when: ansible_userspace_bits == "32"
 
     - name: set internal variables for convenience
       set_fact:
-        prometheus_node_exporter_tarball_url: "https://github.com/prometheus/node_exporter/releases/download/{{ prometheus_node_exporter_version }}/node_exporter-{{ prometheus_node_exporter_version }}.linux-386.tar.gz"
-        prometheus_node_exporter_subdir: "{{ prometheus_install_path }}/node_exporter-{{ prometheus_node_exporter_version }}.linux-386"
-      when: ansible_userspace_bits == "32"
+        prometheus_node_exporter_subdir: "{{ prometheus_install_path }}/node_exporter-{{ prometheus_node_exporter_version }}.{{ prometheus_platform_suffix }}"
 
     - name: set daemon dir for >= 0.12
       set_fact:
@@ -29,6 +31,16 @@
       set_fact:
         prometheus_node_exporter_daemon_dir: "{{ prometheus_install_path }}"
       when: prometheus_node_exporter_version | version_compare('0.12', '<')
+
+    - name: set download url for versions >= 0.13
+      set_fact:
+        prometheus_node_exporter_tarball_url: "https://github.com/prometheus/node_exporter/releases/download/v{{ prometheus_node_exporter_version }}/node_exporter-{{ prometheus_node_exporter_version }}.{{ prometheus_platform_suffix }}.tar.gz"
+      when: prometheus_version | version_compare('0.13', '>=')
+
+    - name: set download url for versions < 0.13
+      set_fact:
+        prometheus_node_exporter_tarball_url: "https://github.com/prometheus/node_exporter/releases/download/{{ prometheus_node_exporter_version }}/node_exporter-{{ prometheus_node_exporter_version }}.{{ prometheus_platform_suffix }}.tar.gz"
+      when: prometheus_version | version_compare('0.13', '<')
 
     - name: download and untar node_exporter tarball
       unarchive:
