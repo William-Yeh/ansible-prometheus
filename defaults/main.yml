@@ -29,6 +29,7 @@ prometheus_db_path:              /var/lib/prometheus
 prometheus_log_path:             /var/log/prometheus
 prometheus_pid_path:             /var/run/prometheus
 prometheus_alertmanager_db_path: /var/lib/alertmanager
+prometheus_alertmanager_opts: alertmanager.url=http://localhost:9093
 
 
 prometheus_download_path: /tmp
