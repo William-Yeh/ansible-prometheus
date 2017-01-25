@@ -2,6 +2,11 @@
 # file: handlers/main.yml
 #
 
+- name: reload systemd
+  systemd:
+    name: prometheus
+    daemon_reload: yes
+
 - name: restart prometheus
   service: name=prometheus state=restarted
   when: prometheus_use_service|bool

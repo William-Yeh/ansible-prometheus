@@ -18,7 +18,7 @@ ENV PLAYBOOK test.yml
 RUN echo "===> Installing git for ansible galaxy..."  && \
     DEBIAN_FRONTEND=noninteractive  \
     apt-get install -y -f git
-RUN ansible-playbook-wrapper -e 'prometheus_node_exporter_use_systemd=false'
+RUN ansible-playbook-wrapper -e 'prometheus_use_systemd=false'
 
 
 

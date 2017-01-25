@@ -1,0 +1,29 @@
+{% if prometheus_alertmanager_url is defined %}
+{% set alertmanager_service_opts = '-alertmanager.url=' + prometheus_alertmanager_url %}
+{% else %}
+{% set alertmanager_service_opts = '' %}
+{% endif %}
+
+[Unit]
+Description=Prometheus Server
+After=network.target
+
+[Service]
+ExecStart={{ prometheus_daemon_dir }}/prometheus \
+    -config.file={{ prometheus_config_path }}/prometheus.yml \
+    {{ alertmanager_service_opts }} \
+    -web.console.templates={{ prometheus_daemon_dir }}/consoles \
+    -web.console.libraries={{ prometheus_daemon_dir }}/console_libraries \
+    -storage.local.path={{ prometheus_db_path }} \
+    {{ prometheus_opts | default() }}
+KillMode=process
+User={{ prometheus_user }}
+Group={{ prometheus_group }}
+Restart=on-failure
+ExecReload=/bin/kill -SIGHUP $MAINPID
+
+[Install]
+WantedBy=multi-user.target
+
+# Removed args
+# -web.hostname=https://prometheus.scypho-backend.se \

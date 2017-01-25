@@ -1,0 +1,18 @@
+[Unit]
+Description=Prometheus Alertmanager
+After=network.target
+
+[Service]
+ExecStart={{ prometheus_alertmanager_daemon_dir }}/alertmanager \
+    -config.file={{ prometheus_config_path }}/alertmanager.yml \
+    -storage.path={{ prometheus_alertmanager_db_path }} \
+    {{ prometheus_alertmanager_opts | default() }}
+KillMode=process
+User={{ prometheus_user }}
+Group={{ prometheus_group }}
+Restart=on-failure
+ExecReload=/bin/kill -SIGHUP $MAINPID
+
+[Install]
+WantedBy=multi-user.target
+

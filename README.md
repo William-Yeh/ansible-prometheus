@@ -87,8 +87,7 @@ gosu_version:  "1.10"
 If the Linux distributions are equipped with systemd, this role will use this mechanism accordingly. You can disable this (i.e., use traditional SysV-style init script) by defining the following variable(s) to `false`:
 
 ```yaml
-# currently, only node_exporter is supported.
-prometheus_node_exporter_use_systemd
+prometheus_use_systemd
 ```
 
 
