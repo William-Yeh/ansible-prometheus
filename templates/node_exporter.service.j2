@@ -19,3 +19,6 @@ ExecStart={{ prometheus_node_exporter_daemon_dir }}/node_exporter  {{ prometheus
 {% else %}
 ExecStart={{ prometheus_node_exporter_daemon_dir }}/node_exporter
 {% endif %}
+
+[Install]
+WantedBy=default.task
