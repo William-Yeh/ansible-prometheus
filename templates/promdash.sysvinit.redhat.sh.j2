@@ -1,0 +1,45 @@
+#!/bin/bash
+DAEMON=/usr/local/bin/thin
+BUNDLE=/usr/bin/bundle
+CONFIG_PATH=/etc/thin
+
+SCRIPT_NAME=/etc/init.d/promdash
+
+# Exit if the package is not installed
+[ -x "$DAEMON" ] || exit 0
+
+invoke()
+{
+  CONFIGS=$CONFIG_PATH/*
+  [ -e "$CONFIG_PATH/$2.yml" ] && CONFIGS=$CONFIG_PATH/$2.yml
+  for conf in $CONFIGS
+  do
+    echo "[$1] $conf"
+    cd `grep "^chdir: " $conf|sed -e 's/^chdir: //g'`
+
+    [ -d "./log" ] && chown `grep "^user: " $conf|sed -e 's/^user: //g'` ./log
+    chown -R `grep "^user: " $conf|sed -e 's/^user: //g'` ./tmp/pids
+    chgrp -R `grep "^group: " $conf|sed -e 's/^group: //g'` ./tmp/pids
+
+    if [ -e "Gemfile" ]; then
+      $BUNDLE exec $DAEMON $1 -d --config=$conf
+    else
+      $DAEMON $1 -d --config=$conf
+    fi
+  done
+}
+case "$1" in
+  start)
+  invoke start $2
+  ;;
+  stop)
+  invoke stop $2
+  ;;
+  restart)
+  invoke restart $2
+  ;;
+  *)
+  echo "Usage: $SCRIPT_NAME {start|stop|restart} [config_name]" >&2
+  exit 3
+  ;;
+esac
