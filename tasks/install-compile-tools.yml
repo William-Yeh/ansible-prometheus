@@ -21,6 +21,9 @@
   apt: name=build-essential state=present update_cache=yes
   when: ansible_pkg_mgr == "apt"
 
+- name: install gcc
+  yum: name=gcc state=present update_cache=yes
+  when: ansible_pkg_mgr == "yum"
 
 - name: set internal variables for convenience
   set_fact:
