@@ -10,22 +10,25 @@
 
     - name: set internal variables for convenience
       set_fact:
-        prometheus_node_exporter_tarball_url: "https://github.com/prometheus/node_exporter/releases/download/{{ prometheus_node_exporter_version }}/node_exporter-{{ prometheus_node_exporter_version }}.linux-amd64.tar.gz"
-        prometheus_node_exporter_subdir: "{{ prometheus_install_path }}/node_exporter-{{ prometheus_node_exporter_version }}.linux-amd64"
-      when: ansible_userspace_bits == "64"
+        prometheus_node_exporter_subdir: "{{ prometheus_install_path }}/node_exporter-{{ prometheus_node_exporter_version }}.{{ prometheus_platform_suffix }}"
 
-    - name: set internal variables for convenience
+
+    - name: set download url for versions >= 0.13.0
       set_fact:
-        prometheus_node_exporter_tarball_url: "https://github.com/prometheus/node_exporter/releases/download/{{ prometheus_node_exporter_version }}/node_exporter-{{ prometheus_node_exporter_version }}.linux-386.tar.gz"
-        prometheus_node_exporter_subdir: "{{ prometheus_install_path }}/node_exporter-{{ prometheus_node_exporter_version }}.linux-386"
-      when: ansible_userspace_bits == "32"
+        prometheus_node_exporter_tarball_url: "https://github.com/prometheus/node_exporter/releases/download/v{{ prometheus_node_exporter_version }}/node_exporter-{{ prometheus_node_exporter_version }}.{{ prometheus_platform_suffix }}.tar.gz"
+      when: prometheus_node_exporter_version | version_compare('0.13.0', '>=')
 
-    - name: set daemon dir for >= 0.12
+    - name: set download url for versions < 0.13.0 (OBSOLETE!)
+      set_fact:
+        prometheus_node_exporter_tarball_url: "https://github.com/prometheus/node_exporter/releases/download/{{ prometheus_node_exporter_version }}/node_exporter-{{ prometheus_node_exporter_version }}.{{ prometheus_platform_suffix }}.tar.gz"
+      when: prometheus_node_exporter_version | version_compare('0.13.0', '<')
+
+    - name: set daemon dir for versions >= 0.12
       set_fact:
         prometheus_node_exporter_daemon_dir: "{{ prometheus_node_exporter_subdir }}"
       when: prometheus_node_exporter_version | version_compare('0.12', '>=')
 
-    - name: set daemon dir for < 0.12
+    - name: set daemon dir for versions < 0.12 (OBSOLETE!)
       set_fact:
         prometheus_node_exporter_daemon_dir: "{{ prometheus_install_path }}"
       when: prometheus_node_exporter_version | version_compare('0.12', '<')
@@ -93,6 +96,12 @@
 
 - name: set node_exporter variables
   copy: src="../files/etc-default-node_exporter"  dest=/etc/default/node_exporter
+  register: node_exporter_config
+
+- debug: var=node_exporter_config
+  notify: reload node_exporter
+  when: node_exporter_config.changed
+
 
 - name: copy INIT script to server
   template: src="../templates/node_exporter.sysvinit.{{ ansible_os_family|lower }}.sh.j2"  dest="/etc/init.d/node_exporter"  mode="a+x"
@@ -100,7 +109,7 @@
 
 - name: copy systemd config to server
   template: src="../templates/node_exporter.service.j2"  dest="/lib/systemd/system/node_exporter.service"
-  when: prometheus_node_exporter_use_systemd
+  when: prometheus_node_exporter_use_systemd|bool
 
 
 - name: set INIT status and start

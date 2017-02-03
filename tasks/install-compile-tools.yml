@@ -11,6 +11,7 @@
     - git
     - gzip
     - curl
+    - gcc
 
 - name: install make
   yum: name=make state=present update_cache=yes

@@ -8,17 +8,6 @@
 
 - block:
 
-    - name: set internal variable platform-suffix for convenience
-      set_fact:
-        prometheus_platform_suffix: "linux-amd64"
-      when: ansible_userspace_bits == "64"
-
-    - name: set internal variable platform-suffix for convenience
-      set_fact:
-        prometheus_platform_suffix: "linux-386"
-      when: ansible_userspace_bits == "32"
-
-
     - name: set internal variables for convenience
       set_fact:
         prometheus_subdir: "{{ prometheus_install_path }}/prometheus-{{ prometheus_version }}.{{ prometheus_platform_suffix }}"
@@ -124,6 +113,17 @@
 - name: set INIT status
   service: name=prometheus enabled=yes
 
+
+
+- name: copy rule files from playbook's, if any
+  copy:
+    src: "{{ playbook_dir }}/{{ item.value.src }}"
+    dest: "{{ prometheus_rule_path }}/{{ item.value.dest }}"
+    validate: "{{ prometheus_daemon_dir }}/promtool check-rules %s"
+  with_dict: '{{ prometheus_rule_files | default({}) }}'
+  notify:
+    - reload prometheus
+
 - name: copy prometheus main config file from role's default, if necessary
   template:
     src: "../templates/prometheus.yml.j2"
@@ -142,11 +142,3 @@
   notify:
     - reload prometheus
 
-- name: copy rule files from playbook's, if any
-  copy:
-    src: "{{ playbook_dir }}/{{ item.value.src }}"
-    dest: "{{ prometheus_rule_path }}/{{ item.value.dest }}"
-    validate: "{{ prometheus_daemon_dir }}/promtool check-rules %s"
-  with_dict: '{{ prometheus_rule_files | default({}) }}'
-  notify:
-    - reload prometheus

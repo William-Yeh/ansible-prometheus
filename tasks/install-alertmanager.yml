@@ -8,16 +8,6 @@
 
 - block:
 
-    - name: set internal variable platform-suffix for convenience
-      set_fact:
-        prometheus_platform_suffix: "linux-amd64"
-      when: ansible_userspace_bits == "64"
-
-    - name: set internal variable platform-suffix for convenience
-      set_fact:
-        prometheus_platform_suffix: "linux-386"
-      when: ansible_userspace_bits == "32"
-
 
     - name: set internal variables for convenience, part 1
       set_fact:
@@ -35,7 +25,7 @@
         prometheus_alertmanager_tarball_url: "https://github.com/prometheus/alertmanager/releases/download/v{{ prometheus_alertmanager_version }}/{{ prometheus_alertmanager_signature }}.tar.gz"
       when: prometheus_alertmanager_version | version_compare('0.3', '>=')
 
-    - name: set download url for versions < 0.3.0
+    - name: set download url for versions < 0.3.0 (OBSOLETE!)
       set_fact:
         prometheus_alertmanager_tarball_url: "https://github.com/prometheus/alertmanager/releases/download/{{ prometheus_alertmanager_version }}/{{ prometheus_alertmanager_signature }}.tar.gz"
       when: prometheus_alertmanager_version | version_compare('0.3', '<')

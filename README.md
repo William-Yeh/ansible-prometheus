@@ -77,7 +77,7 @@ prometheus_download_path:  /tmp
 
 
 # version of helper utility "gosu"
-gosu_version:  1.9
+gosu_version:  "1.10"
 ```
 
 
@@ -99,7 +99,7 @@ User-configurable defaults:
 
 ```yaml
 # which version?
-prometheus_version:  1.0.0
+prometheus_version:  1.5.0
 
 
 
@@ -163,7 +163,7 @@ User-configurable defaults:
 
 ```yaml
 # which version?
-prometheus_node_exporter_version:  0.12.0
+prometheus_node_exporter_version:  0.13.0
 ```
 
 Additional command-line arguments, if any (use `node_exporter --help` to see the full list of arguments):
@@ -180,7 +180,7 @@ User-configurable defaults:
 
 ```yaml
 # which version?
-prometheus_alertmanager_version:  0.3.0
+prometheus_alertmanager_version:  0.5.1
 
 # directory for runtime database (currently for `silences.json`)
 prometheus_alertmanager_db_path: /var/lib/alertmanager

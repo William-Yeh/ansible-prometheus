@@ -9,6 +9,16 @@
   when: prometheus_use_service is not defined
 
 
+- name: set internal variable platform-suffix for convenience
+  set_fact:
+    prometheus_platform_suffix: "linux-amd64"
+  when: ansible_userspace_bits == "64"
+
+- name: set internal variable platform-suffix for convenience
+  set_fact:
+    prometheus_platform_suffix: "linux-386"
+  when: ansible_userspace_bits == "32"
+
 
 - block:
 
