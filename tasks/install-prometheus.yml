@@ -33,11 +33,15 @@
         prometheus_daemon_dir: "{{ prometheus_install_path }}"
       when: prometheus_version | version_compare('0.16', '<')
 
+    - stat: path={{ prometheus_subdir }}
+      register: prometheus_subdir
+
     - name: download and untar prometheus tarball
       unarchive:
         src: "{{ prometheus_tarball_url }}"
         dest: "{{ prometheus_install_path }}"
         copy: no
+      when: prometheus_subdir.stat.exists == False or prometheus_clean_tarball == True
 
   when: prometheus_version != "git"
 
