@@ -114,3 +114,7 @@
 
 - name: set INIT status and start
   service: name=node_exporter enabled=yes state=started
+
+- name: set systemd status and start
+  systemd: name=node_exporter enabled=yes state=started
+
