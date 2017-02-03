@@ -114,3 +114,8 @@
 
 - name: set INIT status and start
   service: name=node_exporter enabled=yes state=started
+  when: not prometheus_node_exporter_use_systemd|bool
+
+- name: set systemd status and start
+  systemd: name=node_expoerter enabled=yes state=started
+  when: prometheus_node_exporter_use_systemd
