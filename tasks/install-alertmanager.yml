@@ -123,7 +123,7 @@
   template: src="../templates/alertmanager.sysvinit.{{ ansible_os_family|lower }}.sh.j2"  dest="/etc/init.d/alertmanager"  mode="a+x"
 
 - name: set INIT status
-  service: name=alertmanager enabled=yes
+  service: name=alertmanager enabled=yes daemon_reload=yes
 
 #- name: set INIT status and start
 #  service: name=alertmanager state=started
