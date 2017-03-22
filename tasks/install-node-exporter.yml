@@ -118,4 +118,4 @@
 
 - name: set INIT status and start
   service: name=node_exporter enabled=yes state=started
-  when: "{{ not initscriptcopy.skipped|default(False) and not unitfilecopy.skipped|default(False) }}"
+  when: "{{ not initscriptcopy.skipped|default(False) or not unitfilecopy.skipped|default(False) }}"
