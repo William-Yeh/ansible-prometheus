@@ -111,9 +111,11 @@
 
 - name: copy INIT script to server
   template: src="../templates/prometheus.sysvinit.{{ ansible_os_family|lower }}.sh.j2"  dest="/etc/init.d/prometheus"  mode="a+x"
+  register: initscriptcopy
 
 - name: set INIT status
   service: name=prometheus enabled=yes
+  when: "{{ not initscriptcopy.skipped|default(False) }}"
 
 
 
