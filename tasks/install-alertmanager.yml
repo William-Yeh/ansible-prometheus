@@ -92,6 +92,7 @@
         owner: "{{ prometheus_user }}"
         group: "{{ prometheus_group }}"
         mode: "go-w"
+      when: '{{ not ansible_check_mode }}'
 
   when: prometheus_alertmanager_version == "git"
 

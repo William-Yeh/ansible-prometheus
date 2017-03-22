@@ -92,6 +92,7 @@
     group: "{{ prometheus_group }}"
     mode: "go-w"
     recurse: yes
+  when: '{{ not ansible_check_mode }}'
 
 - name: mkdir for config and data
   file:
