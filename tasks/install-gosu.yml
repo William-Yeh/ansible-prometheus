@@ -24,3 +24,4 @@
 
 - name: add executable permission
   file: path="/usr/local/bin/gosu" state=file mode="a+x"
+  when: '{{ not ansible_check_mode }}'
