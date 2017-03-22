@@ -46,3 +46,4 @@
     dest: "{{ prometheus_workdir }}"
     copy: no
     creates: "{{ prometheus_goroot }}/bin/go"
+  when: "{{ not ansible_check_mode }}"

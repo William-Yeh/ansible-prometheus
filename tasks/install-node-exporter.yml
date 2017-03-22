@@ -38,6 +38,7 @@
         src: "{{ prometheus_node_exporter_tarball_url }}"
         dest: "{{ prometheus_install_path }}"
         copy: no
+      when: "{{ not ansible_check_mode }}"
 
   when: prometheus_node_exporter_version != "git"
 
