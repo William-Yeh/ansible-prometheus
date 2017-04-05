@@ -44,7 +44,7 @@ DAEMON_OPTS="$DAEMON_OPTS -web.console.templates={{ prometheus_daemon_dir }}/con
 {% if prometheus_opts is defined %}
 DAEMON_OPTS="$DAEMON_OPTS {{ prometheus_opts }}"
 {% endif %}
-
+DAEMON_OPTS="$DAEMON_OPTS -storage.local.retention=744h"
 
 # Check if DAEMON binary exist
 [ -f $DAEMON ] || exit 0
