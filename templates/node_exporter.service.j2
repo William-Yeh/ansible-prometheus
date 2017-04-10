@@ -5,6 +5,7 @@ After=network.target
 
 [Service]
 Type=simple
+Restart=on-failure
 
 #ExecStartPre=/bin/sh -c  " mkdir -p '{{ prometheus_pid_path }}' '{{ prometheus_log_path }}' "
 #ExecStartPre=/bin/sh -c  " chown -R {{ prometheus_user }} '{{ prometheus_pid_path }}' '{{ prometheus_log_path }}' "
