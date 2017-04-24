@@ -32,6 +32,11 @@
       prometheus_node_exporter_use_systemd: true
     when: ansible_distribution == "Red Hat Enterprise Linux" and ansible_distribution_version|int >= 7
 
+  - name: use systemd for Virtuozzo >= 7
+    set_fact:
+      prometheus_node_exporter_use_systemd: true
+    when: ansible_distribution == "Virtuozzo" and ansible_distribution_version|int >= 7
+
   - name: use systemd for Debian >= 8
     set_fact:
       prometheus_node_exporter_use_systemd: true
