@@ -109,7 +109,12 @@
 
 - name: copy systemd config to server
   template: src="../templates/node_exporter.service.j2"  dest="/lib/systemd/system/node_exporter.service"
+  register: prometheus_node_exporter_unit_file
   when: prometheus_node_exporter_use_systemd|bool
+
+- name: reload systemd for new unit file
+  command: systemctl daemon-reload
+  when: prometheus_node_exporter_unit_file.changed
 
 
 - name: set INIT status and start
