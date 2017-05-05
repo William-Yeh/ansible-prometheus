@@ -11,6 +11,7 @@
 #
 
 prometheus_user:   prometheus
+prometheus_user_shell: /sbin/nologin
 prometheus_group:  prometheus
 
 prometheus_version:                 1.5.0
