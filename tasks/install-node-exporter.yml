@@ -37,6 +37,7 @@
       unarchive:
         src: "{{ prometheus_node_exporter_tarball_url }}"
         dest: "{{ prometheus_install_path }}"
+        creates: "{{prometheus_install_path}}/node_exporter-{{prometheus_node_exporter_version}}.linux-{{ (ansible_userspace_bits == '32') | ternary('386', 'amd64') }}"
         copy: no
 
   when: prometheus_node_exporter_version != "git"

@@ -36,6 +36,7 @@
       unarchive:
         src: "{{ prometheus_alertmanager_tarball_url }}"
         dest: "{{ prometheus_alertmanager_untar_path }}"
+        creates: "{{prometheus_install_path}}/alertmanager-{{prometheus_alertmanager_version}}.linux-{{ (ansible_userspace_bits == '32') | ternary('386', 'amd64') }}"
         copy: no
         owner: "{{ prometheus_user }}"
         group: "{{ prometheus_group }}"
