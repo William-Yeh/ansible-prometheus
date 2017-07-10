@@ -1,0 +1,97 @@
+---
+# file: tasks/install-pushgateway.yml
+#
+# Install Prometheus pushgateway.
+#
+# @see http://prometheus.io/docs/introduction/getting_started/
+#
+
+- block:
+
+    - name: set internal variables for convenience
+      set_fact:
+        prometheus_pushgateway_subdir: "{{ prometheus_install_path }}/pushgateway-{{ prometheus_pushgateway_version }}.{{ prometheus_platform_suffix }}"
+
+
+    - name: set download url
+      set_fact:
+        prometheus_pushgateway_tarball_url: "https://github.com/prometheus/pushgateway/releases/download/v{{ prometheus_pushgateway_version }}/pushgateway-{{ prometheus_pushgateway_version }}.{{ prometheus_platform_suffix }}.tar.gz"
+
+    - name: set daemon dir
+      set_fact:
+        prometheus_pushgateway_daemon_dir: "{{ prometheus_pushgateway_subdir }}"
+
+    - name: download and untar pushgateway tarball
+      unarchive:
+        src: "{{ prometheus_pushgateway_tarball_url }}"
+        dest: "{{ prometheus_install_path }}"
+        copy: no
+
+  when: prometheus_pushgateway_version != "git"
+
+
+- block:
+
+    - name: set internal variables for convenience
+      set_fact:
+        prometheus_pushgateway_git_url: "https://github.com/prometheus/pushgateway.git"
+        prometheus_pushgateway_src_path: "{{ prometheus_goroot }}/src/github.com/prometheus/pushgateway"
+        prometheus_pushgateway_daemon_dir: "{{ prometheus_install_path }}"
+
+    - name: delete the pushgateway build directory, if necessary
+      file: path={{ prometheus_pushgateway_src_path }}  state=absent
+      when: prometheus_rebuild
+
+    - name: mkdir for pushgateway source code
+      file: path={{ prometheus_pushgateway_src_path }}  state=directory
+
+    - name: clone the pushgateway project src
+      git:
+        repo: "{{ prometheus_pushgateway_git_url }}"
+        dest: "{{ prometheus_pushgateway_src_path }}"
+        force: yes
+
+    - name: build pushgateway source code
+      command: make
+      args:
+        chdir: "{{ prometheus_pushgateway_src_path }}"
+        creates: pushgateway
+      environment:
+        GO15VENDOREXPERIMENT: 1
+        GOROOT: "{{ prometheus_goroot }}"
+        GOPATH: "{{ prometheus_gopath }}"
+        PATH: "{{ ansible_env.PATH }}:{{ prometheus_goroot }}/bin:{{ prometheus_gopath }}/bin"
+
+    - name: copy the built pushgateway to the install path
+      command: "cp {{ prometheus_pushgateway_src_path }}/pushgateway {{ prometheus_install_path }}"
+      args:
+        creates: "{{ prometheus_install_path }}/pushgateway"
+
+  when: prometheus_pushgateway_version == "git"
+
+
+
+- name: set permissions, owner and group
+  file: path={{ prometheus_pushgateway_daemon_dir }}/pushgateway owner={{ prometheus_user }} group={{ prometheus_group }} mode="go-w"
+
+- name: mkdir for data
+  file:
+    path: "{{ prometheus_db_path }}"
+    state: directory
+    owner: "{{ prometheus_user }}"
+    group: "{{ prometheus_group }}"
+    mode: "u=rwx,g=rx,o="
+
+- name: set pushgateway variables
+  copy: src="../files/etc-default-pushgateway"  dest=/etc/default/pushgateway
+  register: pushgateway_config
+
+- debug: var=pushgateway_config
+  notify: reload pushgateway
+  when: pushgateway_config.changed
+
+- name: copy INIT script to server
+  template: src="../templates/pushgateway.sysvinit.{{ ansible_os_family|lower }}.sh.j2"  dest="/etc/init.d/pushgateway"  mode="a+x"
+
+- name: set INIT status and start
+  service: name=pushgateway enabled=yes state=started

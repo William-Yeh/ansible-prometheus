@@ -59,3 +59,7 @@
 - name: install alertmanager
   include: install-alertmanager.yml
   when: '"alertmanager" in prometheus_components'
+
+- name: install pushgateway
+  include: install-pushgateway.yml
+  when: '"pushgateway" in prometheus_components'

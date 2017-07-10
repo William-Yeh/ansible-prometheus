@@ -38,3 +38,17 @@
 - name: stop alertmanager
   service: name=alertmanager state=stopped
   when: prometheus_use_service|bool
+
+
+
+- name: restart pushgateway
+  service: name=pushgateway state=restarted
+  when: prometheus_use_service|bool
+
+- name: reload pushgateway
+  service: name=pushgateway state=reloaded
+  when: prometheus_use_service|bool
+
+- name: stop pushgateway
+  service: name=pushgateway state=stopped
+  when: prometheus_use_service|bool
