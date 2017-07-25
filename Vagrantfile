@@ -16,9 +16,9 @@ Vagrant.configure(2) do |config|
         end
 
         # Prometheus server UI port
-        node.vm.network :forwarded_port, guest: 9090, host: 9090
+        node.vm.network :forwarded_port, guest: 9090, host: 9090, host_ip: "127.0.0.1", auto_correct: true
         # Alertmanager UI port
-        node.vm.network :forwarded_port, guest: 9093, host: 9093
+        node.vm.network :forwarded_port, guest: 9093, host: 9093, host_ip: "127.0.0.1", auto_correct: true
 
 
        node.vm.provider "virtualbox" do |vb|
