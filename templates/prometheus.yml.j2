@@ -22,19 +22,4 @@ rule_files:
 
 # A list of scrape configurations.
 scrape_configs:
-
-  - job_name: 'prometheus'
-    scrape_interval: 10s
-    scrape_timeout:  10s
-    static_configs:
-      - targets: ['localhost:9090']
-
-  - job_name: "node"
-    file_sd_configs:
-      - files:
-        - '{{ prometheus_file_sd_config_path }}/*.json'
-        - '{{ prometheus_file_sd_config_path }}/*.yml'
-        - '{{ prometheus_file_sd_config_path }}/*.yaml'
-    #static_configs:
-    #- targets:
-    #  - "localhost:9100"
+{{ prometheus_scrape_configs | to_yaml }}
