@@ -24,28 +24,28 @@
 
   - name: use systemd for CentOS >= 7
     set_fact:
-      prometheus_node_exporter_use_systemd: true
+      prometheus_use_systemd: true
     when: ansible_distribution == "CentOS" and ansible_distribution_version|int >= 7
 
   - name: use systemd for RHEL >= 7
     set_fact:
-      prometheus_node_exporter_use_systemd: true
+      prometheus_use_systemd: true
     when: ansible_distribution == "Red Hat Enterprise Linux" and ansible_distribution_version|int >= 7
 
   - name: use systemd for Debian >= 8
     set_fact:
-      prometheus_node_exporter_use_systemd: true
+      prometheus_use_systemd: true
     when: ansible_distribution == "Debian" and ansible_distribution_version|int >= 8
 
   - name: use systemd for Ubuntu >= 16.04
     set_fact:
-      prometheus_node_exporter_use_systemd: true
+      prometheus_use_systemd: true
     when: ansible_distribution == "Ubuntu" and ansible_distribution_version|int >= 16
 
-  when: prometheus_node_exporter_use_systemd is not defined
+  when: prometheus_use_systemd is not defined
 
 
 - name: use traditional SysV init, otherwise
   set_fact:
-    prometheus_node_exporter_use_systemd: false
-  when: prometheus_node_exporter_use_systemd is not defined
+    prometheus_use_systemd: false
+  when: prometheus_use_systemd is not defined

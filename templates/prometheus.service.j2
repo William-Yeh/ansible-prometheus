@@ -1,0 +1,20 @@
+# {{ansible_managed}}
+
+[Unit]
+Description=Prometheus service
+After=network.target
+Wants=network.target
+
+[Service]
+ExecStart={{ prometheus_daemon_dir }}/prometheus -config.file={{ prometheus_config_path }}/prometheus.yml -storage.local.path={{ prometheus_db_path }} -web.console.templates={{ prometheus_daemon_dir }}/consoles  -web.console.libraries={{ prometheus_daemon_dir }}/console_libraries
+
+Restart=always
+RestartSec=20
+TimeoutSec=300
+User={{ prometheus_user }}
+Group={{ prometheus_group }}
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

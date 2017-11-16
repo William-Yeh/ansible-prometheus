@@ -109,6 +109,11 @@
 
 - name: copy INIT script to server
   template: src="../templates/prometheus.sysvinit.{{ ansible_os_family|lower }}.sh.j2"  dest="/etc/init.d/prometheus"  mode="a+x"
+  when: not prometheus_use_systemd|bool
+
+- name: copy systemd config to server
+  template: src="prometheus.service.j2" dest="/lib/systemd/system/prometheus.service"
+  when: prometheus_use_systemd|bool
 
 - name: set INIT status
   service: name=prometheus enabled=yes
