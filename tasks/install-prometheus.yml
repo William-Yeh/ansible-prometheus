@@ -38,6 +38,7 @@
         src: "{{ prometheus_tarball_url }}"
         dest: "{{ prometheus_install_path }}"
         copy: no
+        creates: "{{ prometheus_install_path }}/prometheus-{{ prometheus_version }}.{{ prometheus_platform_suffix }}/prometheus"
 
   when: prometheus_version != "git"
 
