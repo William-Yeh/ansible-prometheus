@@ -7,14 +7,14 @@
 #
 
 - name: set role variables, if necessary
-  include: set-role-variables.yml
+  import_tasks: set-role-variables.yml
 
 - name: install libselinux-python binary for Ansible to work
   yum: name=libselinux-python state=present
   when: ansible_pkg_mgr == "yum"
 
 - name: install dependencies for compiling Prometheus source code
-  include: install-compile-tools.yml
+  import_tasks: install-compile-tools.yml
   when: prometheus_alertmanager_version == "git" or prometheus_node_exporter_version == "git" or prometheus_version == "git"
 
 
@@ -46,16 +46,16 @@
 
 
 - name: install helper utility "gosu"
-  include: install-gosu.yml
+  import_tasks: install-gosu.yml
 
 - name: install prometheus
-  include: install-prometheus.yml
+  import_tasks: install-prometheus.yml
   when: '"prometheus" in prometheus_components'
 
 - name: install node-exporter
-  include: install-node-exporter.yml
+  import_tasks: install-node-exporter.yml
   when: '"node_exporter" in prometheus_components'
 
 - name: install alertmanager
-  include: install-alertmanager.yml
+  import_tasks: install-alertmanager.yml
   when: '"alertmanager" in prometheus_components'
