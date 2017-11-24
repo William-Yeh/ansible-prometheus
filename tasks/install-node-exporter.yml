@@ -113,6 +113,7 @@
 
 - name: reload systemctl
   shell: systemctl daemon-reload
+  ignore_errors: yes
 
 - name: set INIT status and start
   service: name=node_exporter enabled=yes state=started

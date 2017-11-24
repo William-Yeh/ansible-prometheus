@@ -114,6 +114,7 @@
 
 - name: reload systemctl
   shell: systemctl daemon-reload
+  ignore_errors: yes
 
 - name: set INIT status
   service: name=alertmanager enabled=yes
