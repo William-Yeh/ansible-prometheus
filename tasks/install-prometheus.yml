@@ -115,6 +115,8 @@
   template: src="../templates/prometheus.sysvinit.{{ ansible_os_family|lower }}.sh.j2"  dest="/etc/init.d/prometheus"  mode="a+x"
   when: prometheus_version | version_compare('2.0', '<')
 
+- name: reload systemctl
+  shell: systemctl daemon-reload
 
 - name: set INIT status
   service: name=prometheus enabled=yes
