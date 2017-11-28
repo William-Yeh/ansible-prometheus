@@ -13,10 +13,19 @@ before_install:
     - docker build  -f test/Dockerfile-debian7          -t prometheus_wheezy       .
     - docker build  -f test/Dockerfile-centos7          -t prometheus_centos7      .
     - docker build  -f test/Dockerfile-centos6          -t prometheus_centos6      .
-    - docker build  -f test/Dockerfile-ubuntu16.04-git  -t prometheus_xenial_git   .
-    - docker build  -f test/Dockerfile-ubuntu14.04-git  -t prometheus_trusty_git   .
-    - docker build  -f test/Dockerfile-debian8-git      -t prometheus_jessie_git   .
-    - docker build  -f test/Dockerfile-centos7-git      -t prometheus_centos7_git  .
+
+    - docker build  -f test/Dockerfile-v2-ubuntu16.04      -t prometheus_v2_xenial       .
+    - docker build  -f test/Dockerfile-v2-ubuntu14.04      -t prometheus_v2_trusty       .
+    - docker build  -f test/Dockerfile-v2-ubuntu12.04      -t prometheus_v2_precise      .
+    - docker build  -f test/Dockerfile-v2-debian8          -t prometheus_v2_jessie       .
+    - docker build  -f test/Dockerfile-v2-debian7          -t prometheus_v2_wheezy       .
+    - docker build  -f test/Dockerfile-v2-centos7          -t prometheus_v2_centos7      .
+    - docker build  -f test/Dockerfile-v2-centos6          -t prometheus_v2_centos6      .
+
+    #- docker build  -f test/Dockerfile-ubuntu16.04-git  -t prometheus_xenial_git   .
+    #- docker build  -f test/Dockerfile-ubuntu14.04-git  -t prometheus_trusty_git   .
+    #- docker build  -f test/Dockerfile-debian8-git      -t prometheus_jessie_git   .
+    #- docker build  -f test/Dockerfile-centos7-git      -t prometheus_centos7_git  .
 
 script:
     - docker run  -v $(pwd):/data  prometheus_xenial
@@ -26,10 +35,19 @@ script:
     - docker run  -v $(pwd):/data  prometheus_wheezy
     - docker run  -v $(pwd):/data  prometheus_centos7
     - docker run  -v $(pwd):/data  prometheus_centos6
-    - docker run  -v $(pwd):/data  prometheus_xenial_git
-    - docker run  -v $(pwd):/data  prometheus_trusty_git
-    - docker run  -v $(pwd):/data  prometheus_jessie_git
-    - docker run  -v $(pwd):/data  prometheus_centos7_git
+
+    - docker run  -v $(pwd):/data  prometheus_v2_xenial
+    - docker run  -v $(pwd):/data  prometheus_v2_trusty
+    - docker run  -v $(pwd):/data  prometheus_v2_precise
+    - docker run  -v $(pwd):/data  prometheus_v2_jessie
+    - docker run  -v $(pwd):/data  prometheus_v2_wheezy
+    - docker run  -v $(pwd):/data  prometheus_v2_centos7
+    - docker run  -v $(pwd):/data  prometheus_v2_centos6
+
+    #- docker run  -v $(pwd):/data  prometheus_xenial_git
+    #- docker run  -v $(pwd):/data  prometheus_trusty_git
+    #- docker run  -v $(pwd):/data  prometheus_jessie_git
+    #- docker run  -v $(pwd):/data  prometheus_centos7_git
 
     - echo "==> Validating the test results..."
     - grep '^node_boot_time'                            result-ubuntu16.04
@@ -39,10 +57,19 @@ script:
     - grep '^node_boot_time'                            result-debian7
     - grep '^node_boot_time'                            result-centos7
     - grep '^node_boot_time'                            result-centos6
-    - grep '^node_boot_time'                            result-ubuntu16.04-git
-    - grep '^node_boot_time'                            result-ubuntu14.04-git
-    - grep '^node_boot_time'                            result-debian8-git
-    - grep '^node_boot_time'                            result-centos7-git
+
+    - grep '^node_boot_time'                            result-v2-ubuntu16.04
+    - grep '^node_boot_time'                            result-v2-ubuntu14.04
+    - grep '^node_boot_time'                            result-v2-ubuntu12.04
+    - grep '^node_boot_time'                            result-v2-debian8
+    - grep '^node_boot_time'                            result-v2-debian7
+    - grep '^node_boot_time'                            result-v2-centos7
+    - grep '^node_boot_time'                            result-v2-centos6
+
+    #- grep '^node_boot_time'                            result-ubuntu16.04-git
+    #- grep '^node_boot_time'                            result-ubuntu14.04-git
+    #- grep '^node_boot_time'                            result-debian8-git
+    #- grep '^node_boot_time'                            result-centos7-git
 
     - grep '^prometheus_target_interval_length_seconds' result-ubuntu16.04
     - grep '^prometheus_target_interval_length_seconds' result-ubuntu14.04
@@ -51,10 +78,19 @@ script:
     - grep '^prometheus_target_interval_length_seconds' result-debian7
     - grep '^prometheus_target_interval_length_seconds' result-centos7
     - grep '^prometheus_target_interval_length_seconds' result-centos6
-    - grep '^prometheus_target_interval_length_seconds' result-ubuntu16.04-git
-    - grep '^prometheus_target_interval_length_seconds' result-ubuntu14.04-git
-    - grep '^prometheus_target_interval_length_seconds' result-debian8-git
-    - grep '^prometheus_target_interval_length_seconds' result-centos7-git
+
+    - grep '^prometheus_target_interval_length_seconds' result-v2-ubuntu16.04
+    - grep '^prometheus_target_interval_length_seconds' result-v2-ubuntu14.04
+    - grep '^prometheus_target_interval_length_seconds' result-v2-ubuntu12.04
+    - grep '^prometheus_target_interval_length_seconds' result-v2-debian8
+    - grep '^prometheus_target_interval_length_seconds' result-v2-debian7
+    - grep '^prometheus_target_interval_length_seconds' result-v2-centos7
+    - grep '^prometheus_target_interval_length_seconds' result-v2-centos6
+
+    #- grep '^prometheus_target_interval_length_seconds' result-ubuntu16.04-git
+    #- grep '^prometheus_target_interval_length_seconds' result-ubuntu14.04-git
+    #- grep '^prometheus_target_interval_length_seconds' result-debian8-git
+    #- grep '^prometheus_target_interval_length_seconds' result-centos7-git
 
 
     #-------------------------
@@ -68,10 +104,19 @@ script:
     - grep '<title>AlertManager' result-debian7
     - grep '<title>AlertManager' result-centos7
     - grep '<title>AlertManager' result-centos6
-    - grep '<title>AlertManager' result-ubuntu16.04-git
-    - grep '<title>AlertManager' result-ubuntu14.04-git
-    - grep '<title>AlertManager' result-debian8-git
-    - grep '<title>AlertManager' result-centos7-git
+
+    - grep '<title>AlertManager' result-v2-ubuntu16.04
+    - grep '<title>AlertManager' result-v2-ubuntu14.04
+    - grep '<title>AlertManager' result-v2-ubuntu12.04
+    - grep '<title>AlertManager' result-v2-debian8
+    - grep '<title>AlertManager' result-v2-debian7
+    - grep '<title>AlertManager' result-v2-centos7
+    - grep '<title>AlertManager' result-v2-centos6
+    
+    #- grep '<title>AlertManager' result-ubuntu16.04-git
+    #- grep '<title>AlertManager' result-ubuntu14.04-git
+    #- grep '<title>AlertManager' result-debian8-git
+    #- grep '<title>AlertManager' result-centos7-git
 
 
 notifications:

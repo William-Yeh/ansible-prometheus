@@ -111,6 +111,9 @@
   template: src="../templates/node_exporter.service.j2"  dest="/lib/systemd/system/node_exporter.service"
   when: prometheus_node_exporter_use_systemd|bool
 
+- name: reload systemctl
+  shell: systemctl daemon-reload
+  ignore_errors: yes
 
 - name: set INIT status and start
   service: name=node_exporter enabled=yes state=started

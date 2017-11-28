@@ -17,10 +17,7 @@ MAINTAINER William Yeh <william.pjyeh@gmail.com>
 RUN echo "===> Installing the missing "tar" utility for Docker image..."  && \
     yum -y install tar
 
-ENV PLAYBOOK test.yml
-RUN sed -i -e 's/^\(prometheus_version:\).*$/\1 git/'                defaults/main.yml
-RUN sed -i -e 's/^\(prometheus_node_exporter_version:\).*$/\1 git/'  defaults/main.yml
-RUN sed -i -e 's/^\(prometheus_alertmanager_version:\).*$/\1 git/'   defaults/main.yml
+ENV PLAYBOOK testv2.yml
 RUN ansible-playbook-wrapper --extra-vars "prometheus_use_service=False"
 
 
@@ -37,7 +34,7 @@ RUN echo "===> Installing curl for testing purpose..."  && \
 
 
 VOLUME ["/data"]
-ENV    RESULT     /data/result-centos7-git
+ENV    RESULT     /data/result-v2-centos7
 
 CMD  \
      /etc/init.d/node_exporter start  &&  sleep 10  &&  \

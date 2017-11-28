@@ -112,6 +112,10 @@
 - name: copy INIT script to server
   template: src="../templates/alertmanager.sysvinit.{{ ansible_os_family|lower }}.sh.j2"  dest="/etc/init.d/alertmanager"  mode="a+x"
 
+- name: reload systemctl
+  shell: systemctl daemon-reload
+  ignore_errors: yes
+
 - name: set INIT status
   service: name=alertmanager enabled=yes
 
