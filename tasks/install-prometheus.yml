@@ -109,7 +109,7 @@
 
 - name: copy INIT script to server for versions >= 2.0
   template: src="../templates/prometheus.v2.sysvinit.{{ ansible_os_family|lower }}.sh.j2"  dest="/etc/init.d/prometheus"  mode="a+x"
-  when: prometheus_version | version_compare('2.0', '>=')
+  when: prometheus_version | version_compare('2.0', '>=') or prometheus_version == "git"
 
 - name: copy INIT script to server for versions < 2.0
   template: src="../templates/prometheus.sysvinit.{{ ansible_os_family|lower }}.sh.j2"  dest="/etc/init.d/prometheus"  mode="a+x"
@@ -178,4 +178,4 @@
       when: prometheus_conf_main is defined
       notify:
         - reload prometheus
-  when: prometheus_version | version_compare('2.0', '>=')
+  when: prometheus_version | version_compare('2.0', '>=') or prometheus_version == "git"
