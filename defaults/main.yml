@@ -13,12 +13,12 @@
 prometheus_user:   prometheus
 prometheus_group:  prometheus
 
-prometheus_version:                 1.5.0
-prometheus_node_exporter_version:   0.13.0
-prometheus_alertmanager_version:    0.5.1
+prometheus_version:                 2.0.0
+prometheus_node_exporter_version:   0.15.2
+prometheus_alertmanager_version:    0.11.0
 
 gosu_version: "1.10"
-prometheus_go_version:   1.6.2
+prometheus_go_version:   1.9.2
 
 
 prometheus_install_path:         /opt/prometheus
