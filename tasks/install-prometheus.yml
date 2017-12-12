@@ -119,7 +119,7 @@
   copy:
     src: "{{ playbook_dir }}/{{ item.value.src }}"
     dest: "{{ prometheus_rule_path }}/{{ item.value.dest }}"
-    validate: "{{ prometheus_daemon_dir }}/promtool check-rules %s"
+    validate: "{{ prometheus_daemon_dir }}/promtool check rules %s"
   with_dict: '{{ prometheus_rule_files | default({}) }}'
   notify:
     - reload prometheus
@@ -128,7 +128,7 @@
   template:
     src: "../templates/prometheus.yml.j2"
     dest: "{{ prometheus_config_path }}/prometheus.yml"
-    validate: "{{ prometheus_daemon_dir }}/promtool check-config %s"
+    validate: "{{ prometheus_daemon_dir }}/promtool check config %s"
   when: prometheus_conf_main is not defined
   notify:
     - reload prometheus
@@ -137,7 +137,7 @@
   template:
     src: "{{ playbook_dir }}/{{ prometheus_conf_main }}"
     dest: "{{ prometheus_config_path }}/prometheus.yml"
-    validate: "{{ prometheus_daemon_dir }}/promtool check-config %s"
+    validate: "{{ prometheus_daemon_dir }}/promtool check config %s"
   when: prometheus_conf_main is defined
   notify:
     - reload prometheus
