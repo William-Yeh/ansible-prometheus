@@ -1,14 +1,14 @@
 
-williamyeh.prometheus for Ansible Galaxy
+kibatic.prometheus for Ansible Galaxy
 ============
 
-[![Circle CI](https://circleci.com/gh/William-Yeh/ansible-prometheus.svg?style=shield)](https://circleci.com/gh/William-Yeh/ansible-prometheus) [![Build Status](https://travis-ci.org/William-Yeh/ansible-prometheus.svg?branch=master)](https://travis-ci.org/William-Yeh/ansible-prometheus)
+[![Circle CI](https://circleci.com/gh/kibatic/ansible-prometheus.svg?style=shield)](https://circleci.com/gh/kibatic/ansible-prometheus) [![Build Status](https://travis-ci.org/kibatic/ansible-prometheus.svg?branch=master)](https://travis-ci.org/kibatic/ansible-prometheus)
 
 
 
 ## Summary
 
-Role name in Ansible Galaxy: **[williamyeh.prometheus](https://galaxy.ansible.com/williamyeh/prometheus/)**
+Role name in Ansible Galaxy: **[kibatic.prometheus](https://galaxy.ansible.com/kibatic/prometheus/)**
 
 This Ansible role has the following features for [Prometheus](http://prometheus.io/):
 
@@ -260,7 +260,7 @@ Alertmanager:
 
 ### Step 1: add role
 
-Add role name `williamyeh.prometheus` to your playbook file.
+Add role name `kibatic.prometheus` to your playbook file.
 
 
 ### Step 2: add variables
@@ -276,7 +276,7 @@ Simple example:
 - hosts: all
   become: True
   roles:
-    - williamyeh.prometheus
+    - kibatic.prometheus
 
   vars:
     prometheus_components: [ "prometheus", "alertmanager" ]
@@ -297,7 +297,7 @@ More practical example:
 - hosts: all
   become: True
   roles:
-    - williamyeh.prometheus
+    - kibatic.prometheus
 
   vars:
     prometheus_components:
