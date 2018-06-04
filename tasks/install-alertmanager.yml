@@ -23,12 +23,12 @@
     - name: set download url for versions >= 0.3.0
       set_fact:
         prometheus_alertmanager_tarball_url: "https://github.com/prometheus/alertmanager/releases/download/v{{ prometheus_alertmanager_version }}/{{ prometheus_alertmanager_signature }}.tar.gz"
-      when: prometheus_alertmanager_version | version_compare('0.3', '>=')
+      when: prometheus_alertmanager_version is version_compare('0.3', '>=')
 
     - name: set download url for versions < 0.3.0 (OBSOLETE!)
       set_fact:
         prometheus_alertmanager_tarball_url: "https://github.com/prometheus/alertmanager/releases/download/{{ prometheus_alertmanager_version }}/{{ prometheus_alertmanager_signature }}.tar.gz"
-      when: prometheus_alertmanager_version | version_compare('0.3', '<')
+      when: prometheus_alertmanager_version is version_compare('0.3', '<')
 
 
 
