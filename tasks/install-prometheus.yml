@@ -16,22 +16,22 @@
     - name: set download url for versions >= 1.0.0
       set_fact:
         prometheus_tarball_url: "https://github.com/prometheus/prometheus/releases/download/v{{ prometheus_version }}/prometheus-{{ prometheus_version }}.{{ prometheus_platform_suffix }}.tar.gz"
-      when: prometheus_version | version_compare('1.0', '>=')
+      when: prometheus_version is version_compare('1.0', '>=')
 
     - name: set download url for versions < 1.0.0
       set_fact:
         prometheus_tarball_url: "https://github.com/prometheus/prometheus/releases/download/{{ prometheus_version }}/prometheus-{{ prometheus_version }}.{{ prometheus_platform_suffix }}.tar.gz"
-      when: prometheus_version | version_compare('1.0', '<')
+      when: prometheus_version is version_compare('1.0', '<')
 
     - name: set daemon dir for versions >= 0.16
       set_fact:
         prometheus_daemon_dir: "{{ prometheus_subdir }}"
-      when: prometheus_version | version_compare('0.16', '>=')
+      when: prometheus_version is version_compare('0.16', '>=')
 
     - name: set daemon dir for versions < 0.16 (OBSOLETE!)
       set_fact:
         prometheus_daemon_dir: "{{ prometheus_install_path }}"
-      when: prometheus_version | version_compare('0.16', '<')
+      when: prometheus_version is version_compare('0.16', '<')
 
     - name: download and untar prometheus tarball
       unarchive:
