@@ -7,7 +7,7 @@ Wants=network.target
 
 [Service]
 ExecStart={{ prometheus_daemon_dir }}/prometheus --config.file={{ prometheus_config_path }}/prometheus.yml --storage.tsdb.path={{ prometheus_db_path }} --web.console.templates={{ prometheus_daemon_dir }}/consoles  --web.console.libraries={{ prometheus_daemon_dir }}/console_libraries
-
+ExecReload=/bin/kill -HUP $MAINPID
 Restart=always
 RestartSec=20
 TimeoutSec=300
