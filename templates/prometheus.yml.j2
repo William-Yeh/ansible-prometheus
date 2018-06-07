@@ -9,6 +9,10 @@ global:
     monitor: 'master'
 
 
+{% if prometheus_alerting_configs is defined %}
+alerting:
+{{ prometheus_alerting_configs | to_yaml | indent(2, true) }}
+{% endif %}
 
 {% if prometheus_rule_files is defined %}
 # Rule files specifies a list of files from which rules are read.
@@ -17,8 +21,6 @@ rule_files:
   - {{ prometheus_rule_path }}/{{ value.dest }}
   {% endfor %}
 {% endif %}
-
-
 
 # A list of scrape configurations.
 scrape_configs:
