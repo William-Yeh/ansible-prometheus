@@ -16,22 +16,22 @@
     - name: set download url for versions >= 1.0.0
       set_fact:
         prometheus_tarball_url: "https://github.com/prometheus/prometheus/releases/download/v{{ prometheus_version }}/prometheus-{{ prometheus_version }}.{{ prometheus_platform_suffix }}.tar.gz"
-      when: prometheus_version | version_compare('1.0', '>=')
+      when: prometheus_version is version_compare('1.0', '>=')
 
     - name: set download url for versions < 1.0.0
       set_fact:
         prometheus_tarball_url: "https://github.com/prometheus/prometheus/releases/download/{{ prometheus_version }}/prometheus-{{ prometheus_version }}.{{ prometheus_platform_suffix }}.tar.gz"
-      when: prometheus_version | version_compare('1.0', '<')
+      when: prometheus_version is version_compare('1.0', '<')
 
     - name: set daemon dir for versions >= 0.16
       set_fact:
         prometheus_daemon_dir: "{{ prometheus_subdir }}"
-      when: prometheus_version | version_compare('0.16', '>=')
+      when: prometheus_version is version_compare('0.16', '>=')
 
     - name: set daemon dir for versions < 0.16 (OBSOLETE!)
       set_fact:
         prometheus_daemon_dir: "{{ prometheus_install_path }}"
-      when: prometheus_version | version_compare('0.16', '<')
+      when: prometheus_version is version_compare('0.16', '<')
 
     - name: download and untar prometheus tarball
       unarchive:
@@ -110,19 +110,21 @@
 
 - name: copy INIT script to server < 2.0
   template: src="../templates/prometheus.sysvinit.{{ ansible_os_family|lower }}.sh.j2"  dest="/etc/init.d/prometheus"  mode="a+x"
-  when: not prometheus_use_systemd|bool and prometheus_version | version_compare('2.0', '<')
+  when: not prometheus_use_systemd|bool and prometheus_version is version_compare('2.0', '<')
 
 - name: copy INIT script to server >= 2.0
   template: src="../templates/prometheus-v2.sysvinit.{{ ansible_os_family|lower }}.sh.j2"  dest="/etc/init.d/prometheus"  mode="a+x"
-  when: not prometheus_use_systemd|bool and prometheus_version | version_compare('2.0', '>=')
+  when: not prometheus_use_systemd|bool and prometheus_version is version_compare('2.0', '>=')
 
 - name: copy systemd config to server < 2.0
   template: src="prometheus.service.j2" dest="/lib/systemd/system/prometheus.service"
-  when: prometheus_use_systemd|bool and prometheus_version | version_compare('2.0', '<')
+  when: prometheus_use_systemd|bool and prometheus_version is version_compare('2.0', '<')
 
 - name: copy systemd config to server >= 2.0
   template: src="prometheus-v2.service.j2" dest="/lib/systemd/system/prometheus.service"
-  when: prometheus_use_systemd|bool and prometheus_version | version_compare('2.0', '>=')
+  when: prometheus_use_systemd|bool and prometheus_version is version_compare('2.0', '>=')
+
+
 
 - name: set INIT status
   service: name=prometheus enabled=yes
