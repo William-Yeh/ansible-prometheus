@@ -128,7 +128,7 @@ prometheus_conf_main
 ```
 
 
-User-installable rule files (see [doc](http://prometheus.io/docs/alerting/rules/) for details):
+User-installable rule files (see [doc](https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/) for details):
 
 
 ```yaml
