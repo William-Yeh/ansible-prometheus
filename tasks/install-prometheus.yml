@@ -16,28 +16,41 @@
     - name: set download url for versions >= 1.0.0
       set_fact:
         prometheus_tarball_url: "https://github.com/prometheus/prometheus/releases/download/v{{ prometheus_version }}/prometheus-{{ prometheus_version }}.{{ prometheus_platform_suffix }}.tar.gz"
-      when: prometheus_version | version_compare('1.0', '>=')
+      when: prometheus_version is version('1.0', '>=')
 
     - name: set download url for versions < 1.0.0
       set_fact:
         prometheus_tarball_url: "https://github.com/prometheus/prometheus/releases/download/{{ prometheus_version }}/prometheus-{{ prometheus_version }}.{{ prometheus_platform_suffix }}.tar.gz"
-      when: prometheus_version | version_compare('1.0', '<')
+      when: prometheus_version is version('1.0', '<')
 
     - name: set daemon dir for versions >= 0.16
       set_fact:
         prometheus_daemon_dir: "{{ prometheus_subdir }}"
-      when: prometheus_version | version_compare('0.16', '>=')
+      when: prometheus_version is version('0.16', '>=')
 
     - name: set daemon dir for versions < 0.16 (OBSOLETE!)
       set_fact:
         prometheus_daemon_dir: "{{ prometheus_install_path }}"
-      when: prometheus_version | version_compare('0.16', '<')
+      when: prometheus_version is version('0.16', '<')
 
     - name: download and untar prometheus tarball
       unarchive:
         src: "{{ prometheus_tarball_url }}"
         dest: "{{ prometheus_install_path }}"
         copy: no
+
+    - name: set promtool check commands for >= 2.0.0
+      set_fact:
+        promtool_check_config_command: check config
+        promtool_check_rules_command: check rules
+      when: prometheus_version is version('2.0', '>=')
+
+    - name: set promtool check commands for < 2.0.0
+      set_fact:
+        promtool_check_config_command: check-config
+        promtool_check_rules_command: check-rules
+      when: prometheus_version is version('2.0', '<')
+
 
   when: prometheus_version != "git"
 
@@ -49,6 +62,8 @@
         prometheus_git_url: "https://github.com/prometheus/prometheus.git"
         prometheus_src_path: "{{ prometheus_goroot }}/src/github.com/prometheus/prometheus"
         prometheus_daemon_dir: "{{ prometheus_install_path }}"
+        promtool_check_config_command: check config
+        promtool_check_rules_command: check rules
 
     - name: delete the prometheus build directory, if necessary
       file: path="{{ prometheus_src_path }}" state=absent
@@ -119,7 +134,7 @@
   copy:
     src: "{{ playbook_dir }}/{{ item.value.src }}"
     dest: "{{ prometheus_rule_path }}/{{ item.value.dest }}"
-    validate: "{{ prometheus_daemon_dir }}/promtool check-rules %s"
+    validate: "{{ prometheus_daemon_dir }}/promtool {{ promtool_check_rules_command }} %s"
   with_dict: '{{ prometheus_rule_files | default({}) }}'
   notify:
     - reload prometheus
@@ -128,7 +143,7 @@
   template:
     src: "../templates/prometheus.yml.j2"
     dest: "{{ prometheus_config_path }}/prometheus.yml"
-    validate: "{{ prometheus_daemon_dir }}/promtool check-config %s"
+    validate: "{{ prometheus_daemon_dir }}/promtool {{ promtool_check_config_command }} %s"
   when: prometheus_conf_main is not defined
   notify:
     - reload prometheus
@@ -137,7 +152,7 @@
   template:
     src: "{{ playbook_dir }}/{{ prometheus_conf_main }}"
     dest: "{{ prometheus_config_path }}/prometheus.yml"
-    validate: "{{ prometheus_daemon_dir }}/promtool check-config %s"
+    validate: "{{ prometheus_daemon_dir }}/promtool {{ promtool_check_config_command }} %s"
   when: prometheus_conf_main is defined
   notify:
     - reload prometheus
