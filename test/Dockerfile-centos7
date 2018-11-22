@@ -18,7 +18,7 @@ RUN echo "===> Installing the missing "tar" utility for Docker image..."  && \
     yum -y install tar
 
 ENV PLAYBOOK test.yml
-RUN ansible-playbook-wrapper --extra-vars "prometheus_use_service=False"
+RUN ansible-playbook-wrapper --extra-vars "prometheus_use_service=False prometheus_use_systemd=False"
 
 
 
@@ -41,5 +41,5 @@ CMD  \
      /etc/init.d/alertmanager start   &&  sleep 10  &&  \
      /etc/init.d/prometheus start     &&  sleep 60  &&  \
      curl --retry 5 --retry-max-time 120  http://localhost:9100/metrics  > $RESULT   && \
-     curl --retry 5 --retry-max-time 120  http://localhost:9093/         >> $RESULT  && \
+     curl --retry 5 --retry-max-time 120  http://localhost:9093/metrics  >> $RESULT  && \
      curl --retry 5 --retry-max-time 120  http://localhost:9090/metrics  >> $RESULT

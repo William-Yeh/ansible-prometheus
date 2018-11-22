@@ -24,6 +24,9 @@ To keep this role simple, this role only installs 3 components: Prometheus serve
 - MongoDB: **[williamyeh.mongodb_exporter](https://galaxy.ansible.com/williamyeh/mongodb_exporter/)**
 
 
+Supports for Ubuntu 12.04 (Precise) and CentOS 6 have been ended since Nov 2018.
+
+
 
 ## Role Variables
 
@@ -77,7 +80,7 @@ prometheus_download_path:  /tmp
 
 
 # version of helper utility "gosu"
-gosu_version:  "1.10"
+gosu_version:  "1.11"
 ```
 
 
@@ -87,8 +90,7 @@ gosu_version:  "1.10"
 If the Linux distributions are equipped with systemd, this role will use this mechanism accordingly. You can disable this (i.e., use traditional SysV-style init script) by defining the following variable(s) to `false`:
 
 ```yaml
-# currently, only node_exporter is supported.
-prometheus_node_exporter_use_systemd
+prometheus_use_systemd
 ```
 
 
@@ -99,7 +101,7 @@ User-configurable defaults:
 
 ```yaml
 # which version?
-prometheus_version:  1.5.0
+prometheus_version:  2.5.0
 
 
 
@@ -145,7 +147,7 @@ prometheus_rule_files
 Alertmanager to be triggered:
 
 ```yaml
-prometheus_alertmanager_url
+prometheus_alertmanager_hostport
 ```
 
 
@@ -163,7 +165,7 @@ User-configurable defaults:
 
 ```yaml
 # which version?
-prometheus_node_exporter_version:  0.13.0
+prometheus_node_exporter_version:  0.16.0
 ```
 
 Additional command-line arguments, if any (use `node_exporter --help` to see the full list of arguments):
@@ -180,7 +182,7 @@ User-configurable defaults:
 
 ```yaml
 # which version?
-prometheus_alertmanager_version:  0.5.1
+prometheus_alertmanager_version:  0.15.3
 
 # directory for runtime database (currently for `silences.json`)
 prometheus_alertmanager_db_path: /var/lib/alertmanager
@@ -281,7 +283,7 @@ Simple example:
   vars:
     prometheus_components: [ "prometheus", "alertmanager" ]
 
-    prometheus_alertmanager_url: "http://localhost:9093/"
+    prometheus_alertmanager_hostport: "localhost:9093"
 ```
 
 

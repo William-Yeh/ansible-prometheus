@@ -30,17 +30,9 @@ LOG="{{ prometheus_log_path }}/$NAME.log"
 GOSU=/usr/local/bin/gosu
 
 
-{% if prometheus_alertmanager_url is defined %}
-ALERTMANAGER_OPTS="-alertmanager.url={{ prometheus_alertmanager_url }}"
-{% else %}
-ALERTMANAGER_OPTS=
-{% endif %}
 
-
-
-DAEMON_OPTS="$ALERTMANAGER_OPTS"
-DAEMON_OPTS="$DAEMON_OPTS -config.file=$CONFIG  -storage.local.path={{ prometheus_db_path }}"
-DAEMON_OPTS="$DAEMON_OPTS -web.console.templates={{ prometheus_daemon_dir }}/consoles  -web.console.libraries={{ prometheus_daemon_dir }}/console_libraries"
+DAEMON_OPTS="--config.file=$CONFIG  --storage.tsdb.path={{ prometheus_db_path }}"
+DAEMON_OPTS="$DAEMON_OPTS --web.console.templates={{ prometheus_daemon_dir }}/consoles  --web.console.libraries={{ prometheus_daemon_dir }}/console_libraries"
 {% if prometheus_opts is defined %}
 DAEMON_OPTS="$DAEMON_OPTS {{ prometheus_opts }}"
 {% endif %}

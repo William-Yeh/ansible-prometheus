@@ -1,0 +1,21 @@
+[Unit]
+Description=alertmanager - Prometheus Alertmanagers.
+Documentation=https://github.com/William-Yeh/ansible-prometheus
+After=network.target
+
+[Service]
+Type=simple
+
+#ExecStartPre=/bin/sh -c  " mkdir -p '{{ prometheus_pid_path }}' '{{ prometheus_log_path }}' "
+#ExecStartPre=/bin/sh -c  " chown -R {{ prometheus_user }} '{{ prometheus_pid_path }}' '{{ prometheus_log_path }}' "
+#PIDFile={{ prometheus_pid_path }}/alertmanager.pid
+
+
+User={{ prometheus_user }}
+Group={{ prometheus_group }}
+
+{% if prometheus_alertmanager_opts is defined %}
+ExecStart={{ prometheus_alertmanager_daemon_dir }}/alertmanager  {{ prometheus_alertmanager_opts }}  --config.file={{ prometheus_config_path }}/alertmanager.yml  --storage.path={{ prometheus_alertmanager_db_path }}
+{% else %}
+ExecStart={{ prometheus_alertmanager_daemon_dir }}/alertmanager                                      --config.file={{ prometheus_config_path }}/alertmanager.yml  --storage.path={{ prometheus_alertmanager_db_path }}
+{% endif %}

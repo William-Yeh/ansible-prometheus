@@ -6,8 +6,10 @@
 # @see http://prometheus.io/docs/introduction/getting_started/
 #
 
+
 - name: set role variables, if necessary
   include: set-role-variables.yml
+
 
 - name: install libselinux-python binary for Ansible to work
   yum: name=libselinux-python state=present
@@ -45,8 +47,9 @@
     - "{{ prometheus_pid_path }}"
 
 
-- name: install helper utility "gosu"
+- name: install helper utility "gosu" for old SysV-style INIT
   include: install-gosu.yml
+  when: not prometheus_use_systemd|bool
 
 - name: install prometheus
   include: install-prometheus.yml

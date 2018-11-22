@@ -8,29 +8,15 @@
 
 - block:
 
-
     - name: set internal variables for convenience, part 1
       set_fact:
         prometheus_alertmanager_signature: "alertmanager-{{ prometheus_alertmanager_version }}.{{ prometheus_platform_suffix }}"
-
 
     - name: set internal variables for convenience, part 2
       set_fact:
         prometheus_alertmanager_untar_path: "{{ prometheus_install_path }}"
         prometheus_alertmanager_daemon_dir: "{{ prometheus_install_path }}/{{ prometheus_alertmanager_signature }}"
-
-
-    - name: set download url for versions >= 0.3.0
-      set_fact:
-        prometheus_alertmanager_tarball_url: "https://github.com/prometheus/alertmanager/releases/download/v{{ prometheus_alertmanager_version }}/{{ prometheus_alertmanager_signature }}.tar.gz"
-      when: prometheus_alertmanager_version | version_compare('0.3', '>=')
-
-    - name: set download url for versions < 0.3.0 (OBSOLETE!)
-      set_fact:
-        prometheus_alertmanager_tarball_url: "https://github.com/prometheus/alertmanager/releases/download/{{ prometheus_alertmanager_version }}/{{ prometheus_alertmanager_signature }}.tar.gz"
-      when: prometheus_alertmanager_version | version_compare('0.3', '<')
-
-
+        prometheus_alertmanager_tarball_url: "https://github.com/prometheus/alertmanager/releases/download/v{{ prometheus_alertmanager_version }}/{{ prometheus_alertmanager_signature }}.tar.gz"  
 
     - name: download and uncompress alertmanager tarball
       unarchive:
@@ -53,7 +39,8 @@
         prometheus_alertmanager_daemon_dir: "{{ prometheus_install_path }}"
 
     - name: install gcc for compiling go-sqlite3
-      action: "{{ ansible_pkg_mgr }} name=gcc state=present"
+      package: name=gcc state=present
+      #action: "{{ ansible_pkg_mgr }} name=gcc state=present"
 
     - name: install static libs for compiling source
       yum: name=glibc-static state=present
@@ -111,13 +98,20 @@
 
 - name: copy INIT script to server
   template: src="../templates/alertmanager.sysvinit.{{ ansible_os_family|lower }}.sh.j2"  dest="/etc/init.d/alertmanager"  mode="a+x"
+  when: not prometheus_use_systemd|bool
+
+- name: copy systemd config to server
+  template: src="../templates/alertmanager.service.j2"  dest="/etc/systemd/system/alertmanager.service"
+  when: prometheus_use_systemd|bool
 
 - name: set INIT status
   service: name=alertmanager enabled=yes
+  when: prometheus_use_service|bool
 
 #- name: set INIT status and start
 #  service: name=alertmanager state=started
 #  when: prometheus_use_service|bool
+
 
 - name: install alertmanager config file from playbook's, if any
   template: src="{{ playbook_dir }}/{{ prometheus_alertmanager_conf }}"  dest="{{ prometheus_config_path }}/alertmanager.yml"

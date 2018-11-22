@@ -1,0 +1,42 @@
+---
+# file: tasks/fix-python.yml
+#
+# Fix Python interpreter for managed hosts.
+#
+# @see https://gist.github.com/gwillem/4ba393dceb55e5ae276a87300f6b8e6f#gistcomment-2581283
+# @see https://stackoverflow.com/a/27815670
+#
+
+#pre_tasks:
+
+#- block:
+
+    - name: find if python2 interpreter exists on the managed host
+      raw: type /usr/bin/python
+      register: py_interpreter
+      changed_when: py_interpreter.rc|int != 0
+      ignore_errors: true
+
+    - debug: var=py_interpreter
+
+    - name: choose python3 for Ansible on the managed host
+      set_fact:
+        ansible_python_interpreter: /usr/bin/python3
+      when: py_interpreter.rc|int != 0
+
+
+    #- name: find any python interpreter exists on the managed host
+    #  #raw: which /usr/bin/python || which /usr/bin/python3
+    #  raw: ! (type /usr/bin/python) || ! (type /usr/bin/python3)
+    #  register: py_interpreter
+    #  changed_when: py_interpreter.stdout != ""
+    #
+    #- set_fact:
+    #    ansible_python_interpreter: "{{ py_interpreter.stdout }}"
+    #    when: py_interpreter.changed
+
+
+    - name: Gathering Facts
+      setup:
+
+#  when: py_interpreter is not defined

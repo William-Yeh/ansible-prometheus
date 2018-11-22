@@ -18,7 +18,7 @@ ENV PLAYBOOK test.yml
 RUN echo "===> Installing git for ansible galaxy..."  && \
     DEBIAN_FRONTEND=noninteractive  \
     apt-get install -y -f git
-RUN ansible-playbook-wrapper -e 'prometheus_node_exporter_use_systemd=false'
+RUN ansible-playbook-wrapper -e 'prometheus_use_systemd=false'
 
 
 
@@ -42,5 +42,5 @@ CMD  \
      service alertmanager start    &&  sleep 10  &&  \
      service prometheus start      &&  sleep 60  &&  \
      curl --retry 5 --retry-max-time 120  http://localhost:9100/metrics  > $RESULT   && \
-     curl --retry 5 --retry-max-time 120  http://localhost:9093/         >> $RESULT  && \
+     curl --retry 5 --retry-max-time 120  http://localhost:9093/metrics  >> $RESULT  && \
      curl --retry 5 --retry-max-time 120  http://localhost:9090/metrics  >> $RESULT

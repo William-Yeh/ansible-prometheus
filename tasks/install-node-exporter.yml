@@ -10,28 +10,8 @@
 
     - name: set internal variables for convenience
       set_fact:
-        prometheus_node_exporter_subdir: "{{ prometheus_install_path }}/node_exporter-{{ prometheus_node_exporter_version }}.{{ prometheus_platform_suffix }}"
-
-
-    - name: set download url for versions >= 0.13.0
-      set_fact:
         prometheus_node_exporter_tarball_url: "https://github.com/prometheus/node_exporter/releases/download/v{{ prometheus_node_exporter_version }}/node_exporter-{{ prometheus_node_exporter_version }}.{{ prometheus_platform_suffix }}.tar.gz"
-      when: prometheus_node_exporter_version | version_compare('0.13.0', '>=')
-
-    - name: set download url for versions < 0.13.0 (OBSOLETE!)
-      set_fact:
-        prometheus_node_exporter_tarball_url: "https://github.com/prometheus/node_exporter/releases/download/{{ prometheus_node_exporter_version }}/node_exporter-{{ prometheus_node_exporter_version }}.{{ prometheus_platform_suffix }}.tar.gz"
-      when: prometheus_node_exporter_version | version_compare('0.13.0', '<')
-
-    - name: set daemon dir for versions >= 0.12
-      set_fact:
-        prometheus_node_exporter_daemon_dir: "{{ prometheus_node_exporter_subdir }}"
-      when: prometheus_node_exporter_version | version_compare('0.12', '>=')
-
-    - name: set daemon dir for versions < 0.12 (OBSOLETE!)
-      set_fact:
-        prometheus_node_exporter_daemon_dir: "{{ prometheus_install_path }}"
-      when: prometheus_node_exporter_version | version_compare('0.12', '<')
+        prometheus_node_exporter_daemon_dir: "{{ prometheus_install_path }}/node_exporter-{{ prometheus_node_exporter_version }}.{{ prometheus_platform_suffix }}"
 
     - name: download and untar node_exporter tarball
       unarchive:
@@ -63,8 +43,22 @@
         dest: "{{ prometheus_node_exporter_src_path }}"
         force: yes
 
+    - name: workaround - clone the necessary go packages
+      git:
+        repo: https://github.com/golang/sys.git
+        dest: "{{ prometheus_gopath }}/src/golang.org/x/sys"
+        depth: 1
+        force: yes
+
+    - name: workaround - clone the necessary go packages
+      git:
+        repo: https://github.com/golang/net.git
+        dest: "{{ prometheus_gopath }}/src/golang.org/x/net"
+        depth: 1
+        force: yes
+
     - name: build node_exporter source code
-      command: make
+      command: make build
       args:
         chdir: "{{ prometheus_node_exporter_src_path }}"
         creates: node_exporter
@@ -105,12 +99,13 @@
 
 - name: copy INIT script to server
   template: src="../templates/node_exporter.sysvinit.{{ ansible_os_family|lower }}.sh.j2"  dest="/etc/init.d/node_exporter"  mode="a+x"
-  when: not prometheus_node_exporter_use_systemd|bool
+  when: not prometheus_use_systemd|bool
 
 - name: copy systemd config to server
-  template: src="../templates/node_exporter.service.j2"  dest="/lib/systemd/system/node_exporter.service"
-  when: prometheus_node_exporter_use_systemd|bool
+  template: src="../templates/node_exporter.service.j2"  dest="/etc/systemd/system/node_exporter.service"
+  when: prometheus_use_systemd|bool
 
 
 - name: set INIT status and start
   service: name=node_exporter enabled=yes state=started
+  when: prometheus_use_service|bool

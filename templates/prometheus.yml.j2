@@ -38,3 +38,11 @@ scrape_configs:
     #static_configs:
     #- targets:
     #  - "localhost:9100"
+
+
+{% if prometheus_alertmanager_hostport is defined %}
+alerting:
+  alertmanagers:
+    - static_configs:
+      - targets: [ {{ prometheus_alertmanager_hostport }} ]
+{% endif %}

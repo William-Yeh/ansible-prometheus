@@ -1,5 +1,11 @@
 - hosts: all
   become: True
+  gather_facts: False
+
+  pre_tasks:
+    - name: fix for python interpreter for managed host
+      include: tasks/fix-python.yml
+
   tasks:
     - include: 'tasks/main.yml'
   handlers:
@@ -13,6 +19,8 @@
     #prometheus_components: [ "node_exporter" ]
     #prometheus_components: [ "alertmanager" ]
     prometheus_components: [ "prometheus", "node_exporter", "alertmanager" ]
+    #prometheus_version: git
+    #prometheus_node_exporter_version: git
     #prometheus_alertmanager_version: git
 
 
@@ -22,7 +30,7 @@
     #    dest: basic.rules
 
 
-    prometheus_alertmanager_url: "http://localhost:9093/"
+    prometheus_alertmanager_hostport: "localhost:9093"
 
     #prometheus_alertmanager_conf: test/alertmanager.yml.j2
 

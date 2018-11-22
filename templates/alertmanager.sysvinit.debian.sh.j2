@@ -31,7 +31,7 @@ GOSU=/usr/local/bin/gosu
 
 
 
-DAEMON_OPTS="-config.file=$CONFIG  -storage.path={{ prometheus_alertmanager_db_path }} "
+DAEMON_OPTS="--config.file=$CONFIG  --storage.path={{ prometheus_alertmanager_db_path }} "
 
 {% if prometheus_alertmanager_opts is defined %}
 DAEMON_OPTS="$DAEMON_OPTS {{ prometheus_alertmanager_opts }}"

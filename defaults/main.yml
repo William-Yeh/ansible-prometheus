@@ -13,12 +13,12 @@
 prometheus_user:   prometheus
 prometheus_group:  prometheus
 
-prometheus_version:                 1.5.0
-prometheus_node_exporter_version:   0.13.0
-prometheus_alertmanager_version:    0.5.1
+prometheus_version:                 2.5.0
+prometheus_node_exporter_version:   0.16.0
+prometheus_alertmanager_version:    0.15.3
 
-gosu_version: "1.10"
-prometheus_go_version:   1.6.2
+gosu_version: "1.11"
+prometheus_go_version:   1.11
 
 
 prometheus_install_path:         /opt/prometheus
@@ -51,4 +51,4 @@ prometheus_rebuild:           false
 
 #---- the following vars are handled in tasks/set-role-variables.yml ------
 
-#prometheus_node_exporter_use_systemd: False  # use "systemd" to start/restart service?
+#prometheus_use_systemd: False  # use "systemd" to start/restart service?
