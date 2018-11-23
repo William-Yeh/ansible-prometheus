@@ -5,6 +5,7 @@ After=network.target
 
 [Service]
 Type=simple
+Restart=on-failure
 
 #ExecStartPre=/bin/sh -c  " mkdir -p '{{ prometheus_pid_path }}' '{{ prometheus_log_path }}' "
 #ExecStartPre=/bin/sh -c  " chown -R {{ prometheus_user }} '{{ prometheus_pid_path }}' '{{ prometheus_log_path }}' "
@@ -19,3 +20,7 @@ ExecStart={{ prometheus_alertmanager_daemon_dir }}/alertmanager  {{ prometheus_a
 {% else %}
 ExecStart={{ prometheus_alertmanager_daemon_dir }}/alertmanager                                      --config.file={{ prometheus_config_path }}/alertmanager.yml  --storage.path={{ prometheus_alertmanager_db_path }}
 {% endif %}
+
+
+[Install]
+WantedBy=multi-user.target

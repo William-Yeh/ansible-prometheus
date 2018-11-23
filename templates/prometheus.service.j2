@@ -5,6 +5,7 @@ After=network.target
 
 [Service]
 Type=simple
+Restart=on-failure
 
 #ExecStartPre=/bin/sh -c  " mkdir -p '{{ prometheus_pid_path }}' '{{ prometheus_log_path }}' "
 #ExecStartPre=/bin/sh -c  " chown -R {{ prometheus_user }} '{{ prometheus_pid_path }}' '{{ prometheus_log_path }}' "
@@ -19,3 +20,7 @@ ExecStart={{ prometheus_daemon_dir }}/prometheus  {{ prometheus_opts }}   --conf
 {% else %}
 ExecStart={{ prometheus_daemon_dir }}/prometheus                          --config.file={{ prometheus_config_path }}/prometheus.yml  --storage.tsdb.path={{ prometheus_db_path }}  --web.console.templates={{ prometheus_daemon_dir }}/consoles  --web.console.libraries={{ prometheus_daemon_dir }}/console_libraries
 {% endif %}
+
+
+[Install]
+WantedBy=multi-user.target
