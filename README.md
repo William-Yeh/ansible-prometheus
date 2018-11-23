@@ -1,5 +1,5 @@
 
-williamyeh.prometheus for Ansible Galaxy
+william-yeh.prometheus for Ansible Galaxy
 ============
 
 [![Circle CI](https://circleci.com/gh/William-Yeh/ansible-prometheus.svg?style=shield)](https://circleci.com/gh/William-Yeh/ansible-prometheus) [![Build Status](https://travis-ci.org/William-Yeh/ansible-prometheus.svg?branch=master)](https://travis-ci.org/William-Yeh/ansible-prometheus)
@@ -19,8 +19,8 @@ This Ansible role has the following features for [Prometheus](http://prometheus.
 
 To keep this role simple, this role only installs 3 components: Prometheus server, Node exporter, and Alertmanager. Use the following roles if you want to install other Prometheus exporters:
 
-- Consul: **[William-Yeh.consul_exporter](https://galaxy.ansible.com/William-Yeh/consul_exporter/)**
-- Elasticsearch: **[William-Yeh.es_cluster_exporter](https://galaxy.ansible.com/William-Yeh/es_cluster_exporter/)**
+- Consul: **[william-yeh.consul_exporter](https://galaxy.ansible.com/william-yeh/consul_exporter/)**
+- Elasticsearch: **[william-yeh.es_cluster_exporter](https://galaxy.ansible.com/william-yeh/es_cluster_exporter/)**
 - MongoDB: **[williamyeh.mongodb_exporter](https://galaxy.ansible.com/williamyeh/mongodb_exporter/)**
 
 
@@ -262,7 +262,7 @@ Alertmanager:
 
 ### Step 1: add role
 
-Add role name `williamyeh.prometheus` to your playbook file.
+Add role name `william-yeh.prometheus` to your playbook file.
 
 
 ### Step 2: add variables
@@ -278,7 +278,7 @@ Simple example:
 - hosts: all
   become: True
   roles:
-    - williamyeh.prometheus
+    - william-yeh.prometheus
 
   vars:
     prometheus_components: [ "prometheus", "alertmanager" ]
@@ -299,7 +299,7 @@ More practical example:
 - hosts: all
   become: True
   roles:
-    - williamyeh.prometheus
+    - william-yeh.prometheus
 
   vars:
     prometheus_components:
