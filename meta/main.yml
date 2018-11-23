@@ -12,7 +12,8 @@ galaxy_info:
         - name: Ubuntu
           versions:
               - trusty
-              - xenial 
+              - xenial
+              - bionic 
         - name: Debian
           versions:
               - jessie

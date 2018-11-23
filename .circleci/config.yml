@@ -17,6 +17,7 @@ jobs:
       - run:
           name: build application docker image
           command: |
+            docker build  -f test/Dockerfile-ubuntu18.04      -t prometheus_bionic       .
             docker build  -f test/Dockerfile-ubuntu16.04      -t prometheus_xenial       .
             docker build  -f test/Dockerfile-ubuntu14.04      -t prometheus_trusty       .
             docker build  -f test/Dockerfile-debian8          -t prometheus_jessie       .
@@ -26,29 +27,59 @@ jobs:
       - run:
           name: Validating the test results
           command: |
+            docker run  -v $(pwd):/data  prometheus_bionic
             docker run  -v $(pwd):/data  prometheus_xenial
             docker run  -v $(pwd):/data  prometheus_trusty
             docker run  -v $(pwd):/data  prometheus_jessie
             docker run  -v $(pwd):/data  prometheus_wheezy
             docker run  -v $(pwd):/data  prometheus_centos7
 
+            grep '^node_boot_time'                            result-ubuntu18.04
             grep '^node_boot_time'                            result-ubuntu16.04
             grep '^node_boot_time'                            result-ubuntu14.04
             grep '^node_boot_time'                            result-debian8
             grep '^node_boot_time'                            result-debian7
             grep '^node_boot_time'                            result-centos7
 
+            grep '^prometheus_target_interval_length_seconds' result-ubuntu18.04
             grep '^prometheus_target_interval_length_seconds' result-ubuntu16.04
             grep '^prometheus_target_interval_length_seconds' result-ubuntu14.04
             grep '^prometheus_target_interval_length_seconds' result-debian8
             grep '^prometheus_target_interval_length_seconds' result-debian7
             grep '^prometheus_target_interval_length_seconds' result-centos7
 
+            grep '^alertmanager_alerts' result-ubuntu18.04
             grep '^alertmanager_alerts' result-ubuntu16.04
             grep '^alertmanager_alerts' result-ubuntu14.04
             grep '^alertmanager_alerts' result-debian8
             grep '^alertmanager_alerts' result-debian7
             grep '^alertmanager_alerts' result-centos7
+
+
+  build_master_bionic:
+    working_directory: ~/app
+    machine: true
+    #docker:
+    #  - image: docker:18.06.1-ce
+      #- image: docker:18.06.1-ce-git
+    steps:
+      - checkout
+      #- setup_remote_docker:
+      #    docker_layer_caching: true
+      - run:
+          name: build application docker image
+          command: |
+            docker build  -f test/Dockerfile-ubuntu18.04-git  -t prometheus_bionic_git   .
+
+      - run:
+          name: Validating the test results
+          command: |
+            docker run  -v $(pwd):/data  prometheus_bionic_git
+
+            echo "==> Validating the test results..."
+            grep '^node_boot_time'                            result-ubuntu18.04-git
+            grep '^prometheus_target_interval_length_seconds' result-ubuntu18.04-git
+            grep '^alertmanager_alerts'                       result-ubuntu18.04-git
 
 
   build_master_xenial:
@@ -161,6 +192,7 @@ workflows:
   build_and_test:
     jobs:
       - build_stable
+      - build_master_bionic
       - build_master_xenial
       - build_master_trusty
       - build_master_jessie

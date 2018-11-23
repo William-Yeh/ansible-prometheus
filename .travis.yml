@@ -6,6 +6,7 @@ before_install:
     - docker info
     - docker version
 
+    - docker build  -f test/Dockerfile-ubuntu18.04      -t prometheus_bionic       .
     - docker build  -f test/Dockerfile-ubuntu16.04      -t prometheus_xenial       .
     - docker build  -f test/Dockerfile-ubuntu14.04      -t prometheus_trusty       .
     - docker build  -f test/Dockerfile-debian8          -t prometheus_jessie       .
@@ -17,42 +18,50 @@ before_install:
     - docker build  -f test/Dockerfile-centos7-git      -t prometheus_centos7_git  .
 
 script:
+    - docker run  -v $(pwd):/data  prometheus_bionic
     - docker run  -v $(pwd):/data  prometheus_xenial
     - docker run  -v $(pwd):/data  prometheus_trusty
     - docker run  -v $(pwd):/data  prometheus_jessie
     - docker run  -v $(pwd):/data  prometheus_wheezy
     - docker run  -v $(pwd):/data  prometheus_centos7
+    - docker run  -v $(pwd):/data  prometheus_bionic_git
     - docker run  -v $(pwd):/data  prometheus_xenial_git
     - docker run  -v $(pwd):/data  prometheus_trusty_git
     - docker run  -v $(pwd):/data  prometheus_jessie_git
     - docker run  -v $(pwd):/data  prometheus_centos7_git
 
     - echo "==> Validating the test results..."
+    - grep '^node_boot_time'                            result-ubuntu18.04
     - grep '^node_boot_time'                            result-ubuntu16.04
     - grep '^node_boot_time'                            result-ubuntu14.04
     - grep '^node_boot_time'                            result-debian8
     - grep '^node_boot_time'                            result-debian7
     - grep '^node_boot_time'                            result-centos7
+    - grep '^node_boot_time'                            result-ubuntu18.04-git
     - grep '^node_boot_time'                            result-ubuntu16.04-git
     - grep '^node_boot_time'                            result-ubuntu14.04-git
     - grep '^node_boot_time'                            result-debian8-git
     - grep '^node_boot_time'                            result-centos7-git
 
+    - grep '^prometheus_target_interval_length_seconds' result-ubuntu18.04
     - grep '^prometheus_target_interval_length_seconds' result-ubuntu16.04
     - grep '^prometheus_target_interval_length_seconds' result-ubuntu14.04
     - grep '^prometheus_target_interval_length_seconds' result-debian8
     - grep '^prometheus_target_interval_length_seconds' result-debian7
     - grep '^prometheus_target_interval_length_seconds' result-centos7
+    - grep '^prometheus_target_interval_length_seconds' result-ubuntu18.04-git
     - grep '^prometheus_target_interval_length_seconds' result-ubuntu16.04-git
     - grep '^prometheus_target_interval_length_seconds' result-ubuntu14.04-git
     - grep '^prometheus_target_interval_length_seconds' result-debian8-git
     - grep '^prometheus_target_interval_length_seconds' result-centos7-git
 
+    - grep '^alertmanager_alerts' result-ubuntu18.04
     - grep '^alertmanager_alerts' result-ubuntu16.04
     - grep '^alertmanager_alerts' result-ubuntu14.04
     - grep '^alertmanager_alerts' result-debian8
     - grep '^alertmanager_alerts' result-debian7
     - grep '^alertmanager_alerts' result-centos7
+    - grep '^alertmanager_alerts' result-ubuntu18.04-git
     - grep '^alertmanager_alerts' result-ubuntu16.04-git
     - grep '^alertmanager_alerts' result-ubuntu14.04-git
     - grep '^alertmanager_alerts' result-debian8-git

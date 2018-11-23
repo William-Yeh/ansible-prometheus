@@ -2,7 +2,8 @@ Vagrant.configure(2) do |config|
 
     # main & default: normal OS series...
     config.vm.define "main", primary: true do |node|
-        node.vm.box = "ubuntu/xenial64"
+        node.vm.box = "ubuntu/bionic64"
+        #node.vm.box = "ubuntu/xenial64"
         #node.vm.box = "ubuntu/trusty64"
         #node.vm.box = "debian/jessie64"
         #node.vm.box = "debian/wheezy64"
