@@ -8,7 +8,7 @@ williamyeh.prometheus for Ansible Galaxy
 
 ## Summary
 
-Role name in Ansible Galaxy: **[williamyeh.prometheus](https://galaxy.ansible.com/williamyeh/prometheus/)**
+Role name in Ansible Galaxy: **[william-yeh.prometheus](https://galaxy.ansible.com/William-Yeh/prometheus)**
 
 This Ansible role has the following features for [Prometheus](http://prometheus.io/):
 
