@@ -12,6 +12,7 @@ before_install:
     - docker build  -f test/Dockerfile-debian8          -t prometheus_jessie       .
     - docker build  -f test/Dockerfile-debian7          -t prometheus_wheezy       .
     - docker build  -f test/Dockerfile-centos7          -t prometheus_centos7      .
+    - docker build  -f test/Dockerfile-ubuntu18.04-git  -t prometheus_bionic_git   .
     - docker build  -f test/Dockerfile-ubuntu16.04-git  -t prometheus_xenial_git   .
     - docker build  -f test/Dockerfile-ubuntu14.04-git  -t prometheus_trusty_git   .
     - docker build  -f test/Dockerfile-debian8-git      -t prometheus_jessie_git   .
