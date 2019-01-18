@@ -52,6 +52,10 @@
   include: install-prometheus.yml
   when: '"prometheus" in prometheus_components'
 
+- name: configure nofile ulimit parameted 
+  include: prometheus_node_exporter_use_systemd.yml
+  when: prometheus_node_exporter_use_systemd
+
 - name: install node-exporter
   include: install-node-exporter.yml
   when: '"node_exporter" in prometheus_components'

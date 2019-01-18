@@ -1,0 +1,17 @@
+---
+- name: create folder for the limits config
+  file:
+    path: /etc/systemd/system/prometheus.service.d
+    state: directory
+    owner: "root"
+    group: "root"
+    mode: 0644
+
+- name: configure system for file descriptors
+  template:
+    src: "systemd_limits.conf.j2"
+    dest: "/etc/systemd/system/prometheus.service.d/limits.conf"
+    owner: "root"
+    group: "root"
+    mode: 0644
+  notify: reload systemd

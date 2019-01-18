@@ -39,6 +39,7 @@ prometheus_gopath:        "{{ prometheus_workdir }}/gopath"
 
 prometheus_clean_tarball:     true
 
+prometheus_nofile_limit:      65536
 
 # rebuild each time?  (only applied to `git` version)
 prometheus_rebuild:           false
