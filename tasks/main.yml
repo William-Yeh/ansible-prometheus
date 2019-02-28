@@ -32,6 +32,7 @@
     shell: /sbin/nologin
     comment: "Prometheus User"
     state: present
+    system: "{{ prometheus_user_system }}"
 
 - name: mkdir for general cases
   file:

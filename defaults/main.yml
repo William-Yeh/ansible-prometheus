@@ -12,6 +12,7 @@
 
 prometheus_user:   prometheus
 prometheus_group:  prometheus
+prometheus_user_system: no
 
 prometheus_version:                 2.5.0
 prometheus_node_exporter_version:   0.16.0
