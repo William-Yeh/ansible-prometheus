@@ -3,7 +3,7 @@
 
 galaxy_info:
     author: williamyeh
-    description: Install and configure Prometheus
+    description: Install and configure Prometheus, Node Exporter and Alertmanager.
     license: MIT
 
     min_ansible_version: 2.2
@@ -14,10 +14,12 @@ galaxy_info:
               - trusty
               - xenial
               - bionic 
+              - focal
         - name: Debian
           versions:
               - jessie
               - wheezy
+              - buster
         - name: EL
           versions:
               - 7
