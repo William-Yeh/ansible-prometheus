@@ -96,7 +96,7 @@
   when: prometheus_use_systemd|bool
 
 - name: set INIT status
-  service: name=prometheus enabled=yes
+  service: name=prometheus enabled=yes daemon-reload=yes
   when: prometheus_use_service|bool
 
 
