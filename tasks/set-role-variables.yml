@@ -9,15 +9,34 @@
   when: prometheus_use_service is not defined
 
 
+# Architecture: x64_64, CPU bit: 64
 - name: set internal variable platform-suffix for convenience
   set_fact:
     prometheus_platform_suffix: "linux-amd64"
-  when: ansible_userspace_bits == "64"
+  when: ansible_architecture == "x86_64"
+
+# Architecture: arm64, CPU bit: 64
+- name: set internal variable platform-suffix for convenience
+  set_fact:
+    prometheus_platform_suffix: "linux-arm64"
+  when: ansible_architecture == "aarch64"
+
+# Architecture: armv7, CPU bit: 32
+- name: set internal variable platform-suffix for convenience
+  set_fact:
+    prometheus_platform_suffix: "linux-386"
+  when: ansible_architecture == "armv7l"
+
+# Architecture: 386, CPU bit: 32
+- name: set internal variable platform-suffix for convenience
+  set_fact:
+    prometheus_platform_suffix: "linux-386"
+  when: ansible_architecture == "i386"
 
 - name: set internal variable platform-suffix for convenience
   set_fact:
     prometheus_platform_suffix: "linux-386"
-  when: ansible_userspace_bits == "32"
+  when: ansible_architecture == "i686"
 
 
 - block:
