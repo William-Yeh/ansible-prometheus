@@ -101,7 +101,7 @@ User-configurable defaults:
 
 ```yaml
 # which version?
-prometheus_version:  2.5.0
+prometheus_version:  2.28.1
 
 
 
@@ -165,7 +165,7 @@ User-configurable defaults:
 
 ```yaml
 # which version?
-prometheus_node_exporter_version:  0.16.0
+prometheus_node_exporter_version:  1.2.0
 ```
 
 Additional command-line arguments, if any (use `node_exporter --help` to see the full list of arguments):
@@ -182,7 +182,7 @@ User-configurable defaults:
 
 ```yaml
 # which version?
-prometheus_alertmanager_version:  0.15.3
+prometheus_alertmanager_version:  0.22.2
 
 # directory for runtime database (currently for `silences.json`)
 prometheus_alertmanager_db_path: /var/lib/alertmanager
@@ -336,6 +336,7 @@ None.
 - [Robbie Trencheny](https://github.com/robbiet480) - contribute an early version of building binaries from Go source code.
 - [Travis Truman](https://github.com/trumant) - contribute an early version of consul_exporter installer; now moved to [William-Yeh.consul_exporter](https://github.com/William-Yeh/ansible-consul-exporter).
 - [Musee Ullah](https://github.com/lae)
+- [Alexandre Rodrigues](https://github.com/LexVar)
 
 ## License
 
